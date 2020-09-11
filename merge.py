@@ -24,7 +24,7 @@ def addCalendarDay(theYear, theMonth, theDay):
 	if not theDay in calendar[theYear][theMonth].keys():
 		calendar[theYear][theMonth][theDay] = []
 		
-def addCalendarDay(theYear, theMonth, theDay, theItem):
+def addCalendarItem(theYear, theMonth, theDay, theItem):
 	addCalendarMonth(theYear, theMonth, theDay)
 	calendar[theYear][theMonth][theDay].append(theItem)
 
