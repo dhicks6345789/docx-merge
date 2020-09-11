@@ -10,6 +10,7 @@ DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
 #ONEDAY = datetime.timedelta(days=1)
 
 def parseICalFile(theFilename):
+	calendar = {"YEARS":{}}
 	iCalState = ICALSTART
 	iCalData = {}
 	iCalHandle = open(theFilename)
@@ -30,10 +31,11 @@ def parseICalFile(theFilename):
 				startDate = datetime.datetime.strptime(iCalData["StartDate"], DATETIMEFORMAT)
 				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
 				eventLength = endDate - startDate
-				print(eventLength.days)
-				#print(iCalData)
-				#print("2020 11 27 T150000Z")
-			# Code goes here - add the event to the data.
+				if eventLength.days == 0:
+					calendarYear = getCalendarYear(startDate.year)
+					#print(iCalData)
+					#print("2020 11 27 T150000Z")
+					# Code goes here - add the event to the data.
 	iCalHandle.close()
 
 if len(sys.argv) == 1:
