@@ -66,6 +66,6 @@ if sys.argv[1] == "--week-to-view":
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = str(textHandle.read())
 			textHandle.close()
-			print(docxText[docxText.find("<w:body>")+7:docxText.find("</w:body>")])
+			weekToView = docxText[docxText.find("<w:body>")+8:docxText.find("</w:body>")]
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
