@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+import shutil
 import zipfile
 import datetime
 
@@ -58,11 +59,11 @@ def parseICalFile(theFilename):
 
 if len(sys.argv) == 1:
 	print("DOCX Merge - merges data into DOCX templates. Usage:")
-	print("merge.py --week-to-view startDate noOfWeeks data.ics template.docx")
+	print("merge.py --week-to-view startDate noOfWeeks data.ics template.docx output.docx")
 	sys.exit(0)
 	
 if sys.argv[1] == "--week-to-view":
-	if len(sys.argv) == 6:
+	if len(sys.argv) == 7:
 		startDate = datetime.datetime.strptime(sys.argv[2], "%Y%m%d")
 		if not startDate.weekday() == 0:
 			print("ERROR: Start date is not a Monday.")
@@ -73,8 +74,11 @@ if sys.argv[1] == "--week-to-view":
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = str(textHandle.read())
 			textHandle.close()
+			bodyStart = docxText.find("<w:body>")+8
+			bodyEnd = docxText.find("</w:body>")
+			newDocxText = docxText[:bodyStart]
 			for week in range(0, noOfWeeks):
-				weekToViewText = docxText[docxText.find("<w:body>")+8:docxText.find("</w:body>")]
+				weekToViewText = docxText[bodyStart:bodyEnd]
 				for weekDay in range(0, 5):
 					dayString = "{{" + DAYNAMES[weekDay] + "1}}"
 					today = startDate + datetime.timedelta(days=(week*7)+weekDay)
@@ -82,9 +86,12 @@ if sys.argv[1] == "--week-to-view":
 						if today.month in calendar[today.year].keys():
 							if today.day in calendar[today.year][today.month].keys():
 								weekToViewText.replace(dayString, str(calendar[today.year][today.month][today.day]))
-				print(weekToViewText)
-			
-			for calendarYear in sorted(calendar.keys()):
-				print(calendarYear)
+				newDocxText = newDocxText + weekToViewText
+			newDocxText = newDocxText + docxText[bodyEnd:]
+			shutil.copyfile(sys.argv[5], sys.argv[6])
+			with zipfile.ZipFile(sys.argv[6], "a") as outputDocx:
+				textHandle = outputDocx.open("word/document.xml", "w")
+				textHandle.write(newDocxText)
+				outputDocx.close()
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
