@@ -71,7 +71,12 @@ if sys.argv[1] == "--week-to-view":
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = str(textHandle.read())
 			textHandle.close()
-			weekToView = docxText[docxText.find("<w:body>")+8:docxText.find("</w:body>")]
+			weekToViewText = docxText[docxText.find("<w:body>")+8:docxText.find("</w:body>")]
+			for week in range(0, noOfWeeks):
+				for weekDay in range(0, 5):
+					today = startDate + datetime.timedelta(days=(week*7)+weekDay)
+					print(today)
+			
 			for calendarYear in sorted(calendar.keys()):
 				print(calendarYear)
 	else:
