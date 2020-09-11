@@ -56,13 +56,14 @@ def parseICalFile(theFilename):
 
 if len(sys.argv) == 1:
 	print("DOCX Merge - merges data into DOCX templates. Usage:")
-	print("merge.py --week-to-view data.ical template.docx")
+	print("merge.py --week-to-view startDate noOfWeeks data.ics template.docx")
 	sys.exit(0)
 	
 if sys.argv[1] == "--week-to-view":
-	if len(sys.argv) == 4:
-		parseICalFile(sys.argv[2])
-		with zipfile.ZipFile(sys.argv[3], "r") as templateDocx:
+	if len(sys.argv) == 6:
+		startDate = datetime.datetime.strptime(sys.argv[2], "%Y%m%d")
+		parseICalFile(sys.argv[4])
+		with zipfile.ZipFile(sys.argv[5], "r") as templateDocx:
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = str(textHandle.read())
 			textHandle.close()
