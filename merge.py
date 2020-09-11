@@ -19,6 +19,11 @@ def addCalendarMonth(theYear, theMonth):
 	if not theMonth in calendar[theYear].keys():
 		calendar[theYear][theMonth] = {}
 		
+def addCalendarDay(theYear, theMonth, theDay):
+	addCalendarMonth(theYear, theMonth)
+	if not theDay in calendar[theYear][theMonth].keys():
+		calendar[theYear][theMonth][theDay] = {}
+		
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
 	iCalData = {}
@@ -41,7 +46,7 @@ def parseICalFile(theFilename):
 				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
-					addCalendarMonth(startDate.year, startDate.month)
+					addCalendarDay(startDate.year, startDate.month, startDate.day)
 					#print(iCalData)
 					#print("2020 11 27 T150000Z")
 					# Code goes here - add the event to the data.
