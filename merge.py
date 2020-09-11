@@ -92,6 +92,7 @@ if sys.argv[1] == "--week-to-view":
 			with zipfile.ZipFile(sys.argv[6], "a") as outputDocx:
 				textHandle = outputDocx.open("word/document.xml", "w")
 				textHandle.write(str.encode(newDocxText))
+				textHandle.close()
 				outputDocx.close()
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
