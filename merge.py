@@ -22,7 +22,9 @@ def parseICalFile(theFilename):
 			iCalData["Description"] = iCalLine.split(":")[1]
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
-			print(iCalData)
+			if "StartDate" in iCalData.keys() and "EndDate" in iCalData.keys():
+				print(iCalData)
+				print("20201127T150000Z")
 			# Code goes here - add the event to the data.
 	iCalHandle.close()
 
