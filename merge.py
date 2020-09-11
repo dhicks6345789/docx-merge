@@ -7,6 +7,7 @@ ICALSTART = 0
 ICALINVEVENT = 1
 
 DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
+#ONEDAY = datetime.timedelta(days=1)
 
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
@@ -28,10 +29,8 @@ def parseICalFile(theFilename):
 			if "StartDate" in iCalData.keys() and "EndDate" in iCalData.keys():
 				startDate = datetime.datetime.strptime(iCalData["StartDate"], DATETIMEFORMAT)
 				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
-				print(startDate)
-				print(endDate)
-				print(endDate - startDate)
-				print("---")
+				eventLength = endDate - startDate
+				print(eventLength.days)
 				#print(iCalData)
 				#print("2020 11 27 T150000Z")
 			# Code goes here - add the event to the data.
