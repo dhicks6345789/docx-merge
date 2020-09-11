@@ -67,7 +67,7 @@ if sys.argv[1] == "--week-to-view":
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = textHandle.read()
 			textHandle.close()
-			bodyTextResult = re.search(".*<w:body>[.*]</w:body></w:document>", str(docxText))
+			bodyTextResult = re.search(".*\<w:body\>[.*]\</w:body\>\</w:document\>", str(docxText))
 			print(bodyTextResult.group(1))
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
