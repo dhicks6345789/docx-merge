@@ -65,7 +65,7 @@ if sys.argv[1] == "--week-to-view":
 		parseICalFile(sys.argv[2])
 		with zipfile.ZipFile(sys.argv[3], "r") as templateDocx:
 			textHandle = templateDocx.open("word/document.xml")
-			docxText = textHandle.read()
+			docxText = str(textHandle.read())
 			textHandle.close()
 			print(docxText.find("<w:body>"))
 			print(docxText.find("</w:body>"))
