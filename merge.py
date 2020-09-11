@@ -6,6 +6,8 @@ import datetime
 ICALSTART = 0
 ICALINVEVENT = 1
 
+DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
+
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
 	iCalData = {}
@@ -24,8 +26,9 @@ def parseICalFile(theFilename):
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
 			if "StartDate" in iCalData.keys() and "EndDate" in iCalData.keys():
-				startDate = datetime.datetime.strptime(iCalData["StartDate"], "%Y%m%dT%H%M%SZ")
-				print(startDate)
+				startDate = datetime.datetime.strptime(iCalData["StartDate"], DATETIMEFORMAT)
+				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
+				print(endDate - startDate)
 				#print(iCalData)
 				#print("2020 11 27 T150000Z")
 			# Code goes here - add the event to the data.
