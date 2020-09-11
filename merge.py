@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import re
 import sys
 import zipfile
 import datetime
@@ -67,8 +66,6 @@ if sys.argv[1] == "--week-to-view":
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = str(textHandle.read())
 			textHandle.close()
-			print(docxText[docxText.find("<w:body>"):docxText.find("</w:body>")])
-			#bodyTextResult = re.search(".*\<w:body\>[.*]\</w:body\>\</w:document\>", str(docxText))
-			#print(bodyTextResult.group(1))
+			print(docxText[docxText.find("<w:body>")+7:docxText.find("</w:body>")])
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
