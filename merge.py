@@ -62,7 +62,7 @@ if len(sys.argv) == 1:
 if sys.argv[1] == "--week-to-view":
 	if len(sys.argv) == 6:
 		startDate = datetime.datetime.strptime(sys.argv[2], "%Y%m%d")
-		if not startDate.weekday == 0:
+		if not startDate.weekday() == 0:
 			print("ERROR: Start date is not a Monday.")
 			sys.exit(0)
 		noOfWeeks = int(sys.argv[3])
