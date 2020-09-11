@@ -7,6 +7,8 @@ import datetime
 ICALSTART = 0
 ICALINVEVENT = 1
 
+DAYNAMES = {0:"MO",1:"TU",2:"WE",3:"TH",4:"FR",5:"SA",6:"SU"}
+
 DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
 
 calendar = {}
@@ -71,14 +73,16 @@ if sys.argv[1] == "--week-to-view":
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = str(textHandle.read())
 			textHandle.close()
-			weekToViewText = docxText[docxText.find("<w:body>")+8:docxText.find("</w:body>")]
 			for week in range(0, noOfWeeks):
+				weekToViewText = docxText[docxText.find("<w:body>")+8:docxText.find("</w:body>")]
 				for weekDay in range(0, 5):
+					dayString = "{{" + DAYNAMES[weekDay] + "1}}"
 					today = startDate + datetime.timedelta(days=(week*7)+weekDay)
 					if today.year in calendar.keys():
 						if today.month in calendar[today.year].keys():
 							if today.day in calendar[today.year][today.month].keys():
-								print(calendar[today.year][today.month][today.day])
+								weekToViewText.replace(dayString, calendar[today.year][today.month][today.day])
+				print(weekToViewText)
 			
 			for calendarYear in sorted(calendar.keys()):
 				print(calendarYear)
