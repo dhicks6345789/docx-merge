@@ -62,7 +62,8 @@ if len(sys.argv) == 1:
 if sys.argv[1] == "--week-to-view":
 	if len(sys.argv) == 4:
 		parseICalFile(sys.argv[2])
-		with zipfile.ZipFile(sys.argv[2], "r") as templateDocx:
+		#shutil.copyfile(src, dst, *, follow_symlinks=True)
+		with zipfile.ZipFile(sys.argv[3], "r") as templateDocx:
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = textHandle.read()
 			textHandle.close()
