@@ -8,11 +8,11 @@ ICALINVEVENT = 1
 
 DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
 
-calendar = {"YEARS":{}}
+calendar = {}
 
 def addCalendarYear(theYear):
-	if not theYear in calendar["YEARS"].keys():
-		calendar["YEARS"] = {"MONTHS":{}}
+	if not theYear in calendar.keys():
+		calendar[theYear] = {}
 
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
