@@ -1,4 +1,4 @@
-# docx-merge
+# DOCX Merge
 A Python application to perform merges on DOCX format files.
 
 Uses DOCX file templates (from Word, or exported from Google Docs) with mustaces-style variables (i.e. {{var}}).
