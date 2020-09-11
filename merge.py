@@ -24,7 +24,7 @@ def parseICalFile(theFilename):
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
 			if "StartDate" in iCalData.keys() and "EndDate" in iCalData.keys():
-				startDate = datetime.strptime(iCalData["StartDate"], "%Y%m%dT%H%M%SZ")
+				startDate = datetime.datetime.strptime(iCalData["StartDate"], "%Y%m%dT%H%M%SZ")
 				print(startDate)
 				#print(iCalData)
 				#print("2020 11 27 T150000Z")
