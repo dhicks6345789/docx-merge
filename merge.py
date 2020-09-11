@@ -67,7 +67,7 @@ if sys.argv[1] == "--week-to-view":
 			docxText = str(textHandle.read())
 			textHandle.close()
 			weekToView = docxText[docxText.find("<w:body>")+8:docxText.find("</w:body>")]
-			for calendarYear in calendar.keys():
-				print(sorted(calendarYear))
+			for calendarYear in sorted(calendar.keys()):
+				print(calendarYear)
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
