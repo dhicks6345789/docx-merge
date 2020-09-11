@@ -14,7 +14,7 @@ def addCalendarYear(theYear):
 	if not theYear in calendar.keys():
 		calendar[theYear] = {}
 
-def addCalendaraddCalendarMonth(theYear, theMonth):
+def addCalendarMonth(theYear, theMonth):
 	addCalendarYear(theYear)
 	if not theMonth in calendar[theYear].keys():
 		calendar[theYear][theMonth] = {}
