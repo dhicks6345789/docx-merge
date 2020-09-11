@@ -75,7 +75,10 @@ if sys.argv[1] == "--week-to-view":
 			for week in range(0, noOfWeeks):
 				for weekDay in range(0, 5):
 					today = startDate + datetime.timedelta(days=(week*7)+weekDay)
-					print(today)
+					if today.year in calendar.keys():
+						if today.month in calendar[today.year].keys():
+							if today.day in calendar[today.year][today.month].keys():
+								print(calendar[today.year][today.month][today.day])
 			
 			for calendarYear in sorted(calendar.keys()):
 				print(calendarYear)
