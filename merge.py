@@ -67,7 +67,7 @@ if sys.argv[1] == "--week-to-view":
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = str(textHandle.read())
 			textHandle.close()
-			print(docxText[docxText.find("<w:body>"):docxText.find("</w:body>"))
+			print(docxText[docxText.find("<w:body>"):docxText.find("</w:body>")])
 			#bodyTextResult = re.search(".*\<w:body\>[.*]\</w:body\>\</w:document\>", str(docxText))
 			#print(bodyTextResult.group(1))
 	else:
