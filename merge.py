@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys
 
-def parseICalFile(theFilename)
+def parseICalFile(theFilename):
 	iCalHandle = open(theFilename)
 	for iCalLine in iCalHandle.readlines():
 		print(iCalLine)
