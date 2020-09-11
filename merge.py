@@ -25,7 +25,7 @@ def addCalendarDay(theYear, theMonth, theDay):
 		calendar[theYear][theMonth][theDay] = []
 		
 def addCalendarItem(theYear, theMonth, theDay, theItem):
-	addCalendarMonth(theYear, theMonth, theDay)
+	addCalendarDay(theYear, theMonth, theDay)
 	calendar[theYear][theMonth][theDay].append(theItem)
 
 def parseICalFile(theFilename):
