@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+import zipfile
 import datetime
 
 # Define constants for the states of the iCal parser.
@@ -51,9 +52,6 @@ def parseICalFile(theFilename):
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
 					addCalendarItem(startDate.year, startDate.month, startDate.day, iCalData["Description"])
-					#print(iCalData)
-					#print("2020 11 27 T150000Z")
-					# Code goes here - add the event to the data.
 	iCalHandle.close()
 
 if len(sys.argv) == 1:
@@ -64,7 +62,11 @@ if len(sys.argv) == 1:
 if sys.argv[1] == "--week-to-view":
 	if len(sys.argv) == 4:
 		parseICalFile(sys.argv[2])
-		print(calendar)
+		with zipfile.ZipFile(sys.argv[2], "r") as templateDocx:
+			textHandle = templateDocx.open("word/document.xml")
+			docxText = textHandle.read()
+			textHandle.close()
+			print(docxText)
 		#print(sys.argv[3])
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
