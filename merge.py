@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import re
 import sys
 import zipfile
 import datetime
@@ -62,12 +63,11 @@ if len(sys.argv) == 1:
 if sys.argv[1] == "--week-to-view":
 	if len(sys.argv) == 4:
 		parseICalFile(sys.argv[2])
-		#shutil.copyfile(src, dst, *, follow_symlinks=True)
 		with zipfile.ZipFile(sys.argv[3], "r") as templateDocx:
 			textHandle = templateDocx.open("word/document.xml")
 			docxText = textHandle.read()
 			textHandle.close()
-			print(docxText)
-		#print(sys.argv[3])
+			bodyTextResult = re.search(".*<w:body>[.*]</w:body></w:document>", docxText)
+			print(bodyText.group(1))
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
