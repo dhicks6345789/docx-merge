@@ -14,7 +14,7 @@ if len(sys.argv) == 1:
 	
 if sys.argv[1] == "--week-to-view":
 	if len(sys.argv) == 4:
-		parseICal(sys.argv[2])
+		parseICalFile(sys.argv[2])
 		#print(sys.argv[3])
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
