@@ -7,10 +7,14 @@ ICALSTART = 0
 ICALINVEVENT = 1
 
 DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
-#ONEDAY = datetime.timedelta(days=1)
+
+calendar = {"YEARS":{}}
+
+def addCalendarYear(theYear):
+	if not theYear in calendar["YEARS"].keys():
+		calendar["YEARS"] = {"MONTHS":{}}
 
 def parseICalFile(theFilename):
-	calendar = {"YEARS":{}}
 	iCalState = ICALSTART
 	iCalData = {}
 	iCalHandle = open(theFilename)
@@ -32,7 +36,7 @@ def parseICalFile(theFilename):
 				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
-					calendarYear = getCalendarYear(startDate.year)
+					addCalendarYear(startDate.year)
 					#print(iCalData)
 					#print("2020 11 27 T150000Z")
 					# Code goes here - add the event to the data.
@@ -46,6 +50,7 @@ if len(sys.argv) == 1:
 if sys.argv[1] == "--week-to-view":
 	if len(sys.argv) == 4:
 		parseICalFile(sys.argv[2])
+		print(calendar)
 		#print(sys.argv[3])
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
