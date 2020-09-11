@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+import datetime
 
 # Define constants for the states of the iCal parser.
 ICALSTART = 0
