@@ -62,6 +62,7 @@ if len(sys.argv) == 1:
 if sys.argv[1] == "--week-to-view":
 	if len(sys.argv) == 6:
 		startDate = datetime.datetime.strptime(sys.argv[2], "%Y%m%d")
+		noOfWeeks = int(sys.argv[3])
 		parseICalFile(sys.argv[4])
 		with zipfile.ZipFile(sys.argv[5], "r") as templateDocx:
 			textHandle = templateDocx.open("word/document.xml")
