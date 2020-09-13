@@ -70,29 +70,35 @@ if sys.argv[1] == "--week-to-view":
 			sys.exit(0)
 		noOfWeeks = int(sys.argv[3])
 		parseICalFile(sys.argv[4])
-		with zipfile.ZipFile(sys.argv[5], "r") as templateDocx:
-			textHandle = templateDocx.open("word/document.xml")
-			docxText = str(textHandle.read())
-			textHandle.close()
-			bodyStart = docxText.find("<w:body>")+8
-			bodyEnd = docxText.find("</w:body>")
-			newDocxText = docxText[:bodyStart]
-			for week in range(0, noOfWeeks):
-				weekToViewText = docxText[bodyStart:bodyEnd]
-				for weekDay in range(0, 5):
-					dayString = "{{" + DAYNAMES[weekDay] + "1}}"
-					today = startDate + datetime.timedelta(days=(week*7)+weekDay)
-					if today.year in calendar.keys():
-						if today.month in calendar[today.year].keys():
-							if today.day in calendar[today.year][today.month].keys():
-								weekToViewText.replace(dayString, str(calendar[today.year][today.month][today.day]))
-				newDocxText = newDocxText + weekToViewText
-			newDocxText = newDocxText + docxText[bodyEnd:]
-			shutil.copyfile(sys.argv[5], sys.argv[6])
-			with zipfile.ZipFile(sys.argv[6], "a") as outputDocx:
-				textHandle = outputDocx.open("word/document.xml", "w")
-				textHandle.write(str.encode(newDocxText))
-				textHandle.close()
-				outputDocx.close()
+		
+		templateDocx = zipfile.ZipFile(sys.argv[5], "r")
+		templateDocx.extractall("templateTemp")
+		templateDocx.close()
+		textHandle = open("templateTemp/word/document.xml")
+		docxText = str(textHandle.read())
+		textHandle.close()
+		bodyStart = docxText.find("<w:body>")+8
+		bodyEnd = docxText.find("</w:body>")
+		newDocxText = docxText[:bodyStart]
+		for week in range(0, noOfWeeks):
+			weekToViewText = docxText[bodyStart:bodyEnd]
+			for weekDay in range(0, 5):
+				dayString = "{{" + DAYNAMES[weekDay] + "1}}"
+				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
+				if today.year in calendar.keys():
+					if today.month in calendar[today.year].keys():
+						if today.day in calendar[today.year][today.month].keys():
+							weekToViewText.replace(dayString, str(calendar[today.year][today.month][today.day]))
+			newDocxText = newDocxText + weekToViewText
+		newDocxText = newDocxText + docxText[bodyEnd:]
+		textHandle = outputDocx.open("templateTemp/word/document.xml", "w")
+		textHandle.write(str.encode(newDocxText))
+		textHandle.close()
+		
+		templateDocx = zipfile.ZipFile(sys.argv[6], "w")
+		for root, dirs, files in os.walk("templateTemp"):
+			for file in files:
+				templateDocx.write(os.path.join(root, file))
+		templateDocx.close()
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
