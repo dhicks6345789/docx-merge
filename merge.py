@@ -92,7 +92,7 @@ if sys.argv[1] == "--week-to-view":
 			newDocxText = newDocxText + weekToViewText
 		newDocxText = newDocxText + docxText[bodyEnd:]
 		textHandle = open("templateTemp/word/document.xml", "w")
-		textHandle.write(str.encode(newDocxText))
+		textHandle.write(newDocxText)
 		textHandle.close()
 		
 		templateDocx = zipfile.ZipFile(sys.argv[6], "w")
