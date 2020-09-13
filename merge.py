@@ -13,6 +13,8 @@ DAYNAMES = {0:"MO",1:"TU",2:"WE",3:"TH",4:"FR",5:"SA",6:"SU"}
 
 DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
 
+TEMPLATETEMP = "templateTemp/"
+
 calendar = {}
 
 def addCalendarYear(theYear):
@@ -75,7 +77,7 @@ if sys.argv[1] == "--week-to-view":
 		templateDocx = zipfile.ZipFile(sys.argv[5], "r")
 		templateDocx.extractall("templateTemp")
 		templateDocx.close()
-		textHandle = open("templateTemp/word/document.xml")
+		textHandle = open(TEMPLATETEMP + "word/document.xml")
 		docxText = str(textHandle.read())
 		textHandle.close()
 		bodyStart = docxText.find("<w:body>")+8
@@ -92,7 +94,7 @@ if sys.argv[1] == "--week-to-view":
 							weekToViewText.replace(dayString, str(calendar[today.year][today.month][today.day]))
 			newDocxText = newDocxText + weekToViewText
 		newDocxText = newDocxText + docxText[bodyEnd:]
-		textHandle = open("templateTemp/word/document.xml", "w")
+		textHandle = open(TEMPLATETEMP + "word/document.xml", "w")
 		textHandle.write(newDocxText)
 		textHandle.close()
 		
@@ -100,7 +102,7 @@ if sys.argv[1] == "--week-to-view":
 		for root, dirs, files in os.walk("templateTemp/"):
 			for file in files:
 				print("File: " + os.path.join(root, file))
-				print("Arc: " + file)
+				print("Arc: " + os.path.join(root, file)[len(TEMPLATETEMP):])
 				templateDocx.write(os.path.join(root, file))
 		templateDocx.close()
 	else:
