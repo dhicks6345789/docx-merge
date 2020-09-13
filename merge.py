@@ -99,6 +99,8 @@ if sys.argv[1] == "--week-to-view":
 		templateDocx = zipfile.ZipFile(sys.argv[6], "w")
 		for root, dirs, files in os.walk("templateTemp/"):
 			for file in files:
+				print("File: " + os.path.join(root, file))
+				print("Arc: " + file)
 				templateDocx.write(os.path.join(root, file))
 		templateDocx.close()
 	else:
