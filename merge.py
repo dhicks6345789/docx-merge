@@ -91,7 +91,7 @@ if sys.argv[1] == "--week-to-view":
 							weekToViewText.replace(dayString, str(calendar[today.year][today.month][today.day]))
 			newDocxText = newDocxText + weekToViewText
 		newDocxText = newDocxText + docxText[bodyEnd:]
-		textHandle = outputDocx.open("templateTemp/word/document.xml", "w")
+		textHandle = open("templateTemp/word/document.xml", "w")
 		textHandle.write(str.encode(newDocxText))
 		textHandle.close()
 		
