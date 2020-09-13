@@ -97,7 +97,7 @@ if sys.argv[1] == "--week-to-view":
 		textHandle.close()
 		
 		templateDocx = zipfile.ZipFile(sys.argv[6], "w")
-		for root, dirs, files in os.walk("templateTemp/*"):
+		for root, dirs, files in os.walk("templateTemp"):
 			for file in files:
 				templateDocx.write(os.path.join(root, file))
 		templateDocx.close()
