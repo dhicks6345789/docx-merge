@@ -103,5 +103,7 @@ if sys.argv[1] == "--week-to-view":
 			for file in files:
 				templateDocx.write(os.path.join(root, file), os.path.join(root, file)[len(TEMPLATETEMP):])
 		templateDocx.close()
+		
+		shutil.rmtree(TEMPLATETEMP)
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
