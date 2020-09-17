@@ -44,7 +44,7 @@ def addCalendarItem(theYear, theMonth, theDay, theItem):
 	
 def normaliseString(theString):
 	result = theString.replace("\\n","\n").replace("\\,",",").strip()
-	if result.startswith("Join"):
+	if result.startswith("meet"):
 		print("AAA" + result + "BBB")
 	return(result)
 
