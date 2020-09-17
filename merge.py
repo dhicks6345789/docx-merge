@@ -91,7 +91,8 @@ if sys.argv[1] == "--week-to-view":
 				if today.year in calendar.keys():
 					if today.month in calendar[today.year].keys():
 						if today.day in calendar[today.year][today.month].keys():
-							weekToViewText.replace(dayString, str(calendar[today.year][today.month][today.day]))
+							#weekToViewText = weekToViewText.replace(dayString, str(calendar[today.year][today.month][today.day]))
+							weekToViewText = weekToViewText.replace(dayString, calendar[today.year][today.month][today.day])
 			newDocxText = newDocxText + weekToViewText
 		newDocxText = newDocxText + docxText[bodyEnd:]
 		textHandle = open(TEMPLATETEMP + "word/document.xml", "w")
