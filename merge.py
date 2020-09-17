@@ -93,12 +93,15 @@ if sys.argv[1] == "--week-to-view":
 		for week in range(0, noOfWeeks):
 			weekToViewText = docxText[bodyStart:bodyEnd]
 			for weekDay in range(0, 5):
+				dayContents = ""
 				dayString = "{{" + DAYNAMES[weekDay] + "1}}"
 				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
 				if today.year in calendar.keys():
 					if today.month in calendar[today.year].keys():
 						if today.day in calendar[today.year][today.month].keys():
-							weekToViewText = weekToViewText.replace(dayString, str(calendar[today.year][today.month][today.day]))
+							for dayItem in calendar[today.year][today.month][today.day]
+								dayContents = dayContents + dayItem + "\n"
+				weekToViewText = weekToViewText.replace(dayString, dayContents.strip())
 			newDocxText = newDocxText + weekToViewText
 		newDocxText = newDocxText + docxText[bodyEnd:]
 		textHandle = open(TEMPLATETEMP + "word/document.xml", "w")
