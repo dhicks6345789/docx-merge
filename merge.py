@@ -41,6 +41,9 @@ def addCalendarDay(theYear, theMonth, theDay):
 def addCalendarItem(theYear, theMonth, theDay, theItem):
 	addCalendarDay(theYear, theMonth, theDay)
 	calendar[theYear][theMonth][theDay].append(theItem)
+	
+def normaliseString(theString):
+	return(theString.replace("\\n","\n").replace("\\,",","))
 
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
@@ -64,7 +67,7 @@ def parseICalFile(theFilename):
 				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
-					addCalendarItem(startDate.year, startDate.month, startDate.day, iCalData["Description"])
+					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
 	iCalHandle.close()
 
 if len(sys.argv) == 1:
