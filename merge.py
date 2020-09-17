@@ -5,18 +5,25 @@ import shutil
 import zipfile
 import datetime
 
-# Define constants for the states of the iCal parser.
+# DOCX Merge - a utility to do document merges with DOCX files.
+
+# Possible states for the iCal parser.
 ICALSTART = 0
 ICALINVEVENT = 1
 
+# Used for placeholder names in calendars.
 DAYNAMES = {0:"MO",1:"TU",2:"WE",3:"TH",4:"FR",5:"SA",6:"SU"}
 
+# The date/time format string used in iCal files.
 DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
 
+# DOCX files are ZIP files - we need a folder to unzip the contenst into if we want to modify a contained file.
 TEMPLATETEMP = "templateTemp/"
 
+# A place to put calendar data read from an iCal file.
 calendar = {}
 
+# Make sure the given Year exists in the calendar.
 def addCalendarYear(theYear):
 	if not theYear in calendar.keys():
 		calendar[theYear] = {}
