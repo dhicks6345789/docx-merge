@@ -92,7 +92,7 @@ if sys.argv[1] == "--week-to-view":
 		newDocxText = docxText[:bodyStart]
 		for week in range(0, noOfWeeks):
 			weekToViewText = docxText[bodyStart:bodyEnd]
-			for weekDay in range(0, 5):
+			for weekDay in range(0, 7):
 				dayContents = ""
 				dayString = "{{" + DAYNAMES[weekDay] + "1}}"
 				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
