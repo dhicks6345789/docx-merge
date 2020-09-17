@@ -43,8 +43,8 @@ def addCalendarItem(theYear, theMonth, theDay, theItem):
 	calendar[theYear][theMonth][theDay].append(theItem)
 	
 def normaliseString(theString):
-	#return(theString.replace("\\n","\n").replace("\\,",",").replace("·","").strip())
-	return(theString.replace("\\n","\n").replace("\\,",",").strip())
+	return(theString.replace("\\n","\n").replace("\\,",",").replace(" · ","").strip())
+	#return(theString.replace("\\n","\n").replace("\\,",",").strip())
 
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
