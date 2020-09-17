@@ -43,9 +43,9 @@ def addCalendarItem(theYear, theMonth, theDay, theItem):
 	calendar[theYear][theMonth][theDay].append(theItem)
 	
 def normaliseString(theString):
-	#return(theString.replace("\\n","\n").replace("\\,",",").replace(" · ","").strip())
 	result = theString.replace("\\n","\n").replace("\\,",",").strip()
-	print("AAA" + result + "BBB")
+	if result.startswith("Join"):
+		print("AAA" + result + "BBB")
 	return(result)
 
 def parseICalFile(theFilename):
