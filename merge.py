@@ -99,7 +99,7 @@ if sys.argv[1] == "--week-to-view":
 				if today.year in calendar.keys():
 					if today.month in calendar[today.year].keys():
 						if today.day in calendar[today.year][today.month].keys():
-							for dayItem in calendar[today.year][today.month][today.day]
+							for dayItem in calendar[today.year][today.month][today.day]:
 								dayContents = dayContents + dayItem + "\n"
 				weekToViewText = weekToViewText.replace(dayString, dayContents.strip())
 			newDocxText = newDocxText + weekToViewText
