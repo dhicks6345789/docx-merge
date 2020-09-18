@@ -110,6 +110,11 @@ def putFile(thePath, theData):
 	textHandle = open(thePath, "w")
 	textHandle.write(theData)
 	textHandle.close()
+	
+def unZeroPad(theString):
+	if theString[0] == "0":
+		return(theString[1:])
+	return(theString)
 
 # Check arguments, print a usage message if needed.
 if len(sys.argv) == 1:
@@ -142,7 +147,7 @@ if sys.argv[1] == "--week-to-view":
 			for weekDay in range(0, 7):
 				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
 				# Find the "title" string for the day.
-				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "TI}}", today.strftime("%A, %-d %B"))
+				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "TI}}", today.strftime("%A, ") + unZeroPad(today.strftime("%d")) + today.strftime(" %B"))
 				# Find the "content" string for the day.
 				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "CO}}", "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}")
 			newDocxText = newDocxText + weekToViewText
