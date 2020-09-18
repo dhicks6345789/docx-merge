@@ -74,6 +74,28 @@ def parseICalFile(theFilename):
 				if eventLength.days == 0:
 					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
 	iCalHandle.close()
+	
+def extractDocx(theFilename, destinationPath):
+	templateDocx = zipfile.ZipFile(theFilename, "r")
+	templateDocx.extractall(destinationPath)
+	templateDocx.close()
+	textHandle = open(destinationPath + "word/document.xml")
+	docxText = str(textHandle.read())
+	textHandle.close()
+	return(docxText)
+
+def compressDocx(sourcePath, theFilename):
+	theDocx = zipfile.ZipFile(sys.argv[6], "w")
+	for root, dirs, files in os.walk(sourcePath):
+		for file in files:
+			theDocx.write(os.path.join(root, file), os.path.join(root, file)[len(sourcePath):])
+		theDocx.close()
+	shutil.rmtree(sourcePath)
+
+def putFile(thePath, theData):
+	textHandle = open(thePath, "w")
+	textHandle.write(theData)
+	textHandle.close()
 
 if len(sys.argv) == 1:
 	print("DOCX Merge - merges data into DOCX templates. Usage:")
@@ -89,16 +111,33 @@ if sys.argv[1] == "--week-to-view":
 		noOfWeeks = int(sys.argv[3])
 		parseICalFile(sys.argv[4])
 		
-		#templateDocx = zipfile.ZipFile(sys.argv[5], "r")
-		#templateDocx.extractall("templateTemp")
-		#templateDocx.close()
+		docxText = extractDocx(sys.argv[5], TEMPLATETEMP)
+		bodyStart = docxText.find("<w:body>")+8
+		bodyEnd = docxText.find("</w:body>")
+		newDocxText = docxText[:bodyStart]
+		for week in range(0, noOfWeeks):
+			weekToViewText = docxText[bodyStart:bodyEnd]
+			for weekDay in range(0, 7):
+				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "}}", "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}")
+			newDocxText = newDocxText + weekToViewText
+		newDocxText = newDocxText + docxText[bodyEnd:]
+		putFile(TEMPLATETEMP + "word/document.xml", newDocxText)
+		compressDocx(TEMPLATETEMP, sys.argv[6])
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		templateDocx = docx.Document(sys.argv[5])
-		#textHandle = open(TEMPLATETEMP + "word/document.xml")
-		#docxText = str(textHandle.read())
-		#textHandle.close()
-		#bodyStart = docxText.find("<w:body>")+8
-		#bodyEnd = docxText.find("</w:body>")
-		#newDocxText = docxText[:bodyStart]
+		
 		for week in range(0, noOfWeeks):
 			#weekToViewText = docxText[bodyStart:bodyEnd]
 			for weekDay in range(0, 7):
