@@ -18,7 +18,8 @@ ICALSTART = 0
 ICALINVEVENT = 1
 
 # Used for placeholder names in calendars.
-DAYNAMES = {0:"MO",1:"TU",2:"WE",3:"TH",4:"FR",5:"SA",6:"SU"}
+DAYNAMES = ["MO","TU","WE","TH","FR","SA","SU"}
+DAYTITLES = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"}
 
 # The date/time format string used in iCal files.
 DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
@@ -139,7 +140,11 @@ if sys.argv[1] == "--week-to-view":
 		for week in range(0, noOfWeeks):
 			weekToViewText = docxText[bodyStart:bodyEnd]
 			for weekDay in range(0, 7):
-				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "}}", "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}")
+	     			today = startDate + datetime.timedelta(days=(week*7)+weekDay)
+				# Find the "title" string for the day.
+				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "TI}}", today.strftime("%A, %-d %B"))
+				# Find the "content" string for the day.
+				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "CO}}", "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}")
 			newDocxText = newDocxText + weekToViewText
 		# Re-write the content back to the output location.
 		newDocxText = newDocxText + docxText[bodyEnd:]
