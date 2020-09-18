@@ -83,14 +83,15 @@ def parseICalFile(theFilename):
 			lastField = "Description"
 		elif iCalState == ICALINVEVENT and iCalLine.startswith(" ") and lastField in iCalData.keys():
 			iCalData[lastField] = iCalData[lastField] + iCalLine[1:]
+			print(iCalData[lastField])
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
+			lastField = ""
 			iCalState = ICALSTART
 			if "StartDate" in iCalData.keys() and "EndDate" in iCalData.keys():
 				startDate = datetime.datetime.strptime(iCalData["StartDate"], DATETIMEFORMAT)
 				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
-					print(iCalData["Description"])
 					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
 	iCalHandle.close()
 
