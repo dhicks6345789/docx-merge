@@ -111,10 +111,14 @@ if sys.argv[1] == "--week-to-view":
 							for dayItem in calendar[today.year][today.month][today.day]:
 								dayContents = dayContents + dayItem + "\n"
 				for paragraph in templateDocx.paragraphs:
-					print(paragraph.text)
 					if dayString in paragraph.text:
 						print(paragraph.text)
 						#paragraph.text = 'new text containing ocean'
+				for table in document.tables:
+					for cell in table.cells:
+						for paragraph in cell.paragraphs:
+							if dayString in paragraph.text:
+								print(paragraph.text)
 				#dayXMLText = dayContents.strip()
 				##for dayLine in dayContents.strip().split("\n"):
 				##	dayXMLText = dayXMLText + "<w:t xmlns:w=\"http://schemas.microsoft.com/office/word/2003/wordml\">"
