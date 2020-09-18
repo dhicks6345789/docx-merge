@@ -114,7 +114,7 @@ if sys.argv[1] == "--week-to-view":
 					if dayString in paragraph.text:
 						print(paragraph.text)
 						#paragraph.text = 'new text containing ocean'
-				for table in document.tables:
+				for table in templateDocx.tables:
 					for cell in table.cells:
 						for paragraph in cell.paragraphs:
 							if dayString in paragraph.text:
