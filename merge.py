@@ -140,12 +140,11 @@ if sys.argv[1] == "--week-to-view":
 		for week in range(0, noOfWeeks):
 			weekToViewText = docxText[bodyStart:bodyEnd]
 			for weekDay in range(0, 7):
-	     			today = startDate + datetime.timedelta(days=(week*7)+weekDay)
-				# Find the "title" string for the day.
-				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "TI}}", today.strftime("%A, %-d %B"))
-				
-				# Find the "content" string for the day.
-				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "CO}}", "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}")
+				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
+# Find the "title" string for the day.
+#weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "TI}}", today.strftime("%A, %-d %B"))
+# Find the "content" string for the day.
+#weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "CO}}", "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}")
 			newDocxText = newDocxText + weekToViewText
 		# Re-write the content back to the output location.
 		newDocxText = newDocxText + docxText[bodyEnd:]
