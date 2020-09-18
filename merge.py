@@ -90,6 +90,7 @@ def parseICalFile(theFilename):
 				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
+					print(iCalData["Description"])
 					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
 	iCalHandle.close()
 
