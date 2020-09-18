@@ -1,13 +1,17 @@
 #!/usr/bin/python
+
+# DOCX Merge - a utility to do document merges with DOCX files.
+
+# Standard libraries.
 import os
 import sys
 import shutil
 import zipfile
 import datetime
 
+# The python-docx library, for manipulating DOCX files.
+# Importantly, when installing with pip, that not the "docx" library, that an earlier version - do "pip install python-docx".
 import docx
-
-# DOCX Merge - a utility to do document merges with DOCX files.
 
 # Possible states for the iCal parser.
 ICALSTART = 0
@@ -30,26 +34,31 @@ def addCalendarYear(theYear):
 	if not theYear in calendar.keys():
 		calendar[theYear] = {}
 
+# Make sure the given Month exists in the calendar.
 def addCalendarMonth(theYear, theMonth):
 	addCalendarYear(theYear)
 	if not theMonth in calendar[theYear].keys():
 		calendar[theYear][theMonth] = {}
-		
+
+# Make sure the given Day exists in the calendar.		
 def addCalendarDay(theYear, theMonth, theDay):
 	addCalendarMonth(theYear, theMonth)
 	if not theDay in calendar[theYear][theMonth].keys():
 		calendar[theYear][theMonth][theDay] = []
-		
+
+# Add the given Item to the calendar, at the given day / month / year.
 def addCalendarItem(theYear, theMonth, theDay, theItem):
 	addCalendarDay(theYear, theMonth, theDay)
 	calendar[theYear][theMonth][theDay].append(theItem)
-	
+
+# Strip unwanted characters from strings.
 def normaliseString(theString):
 	result = theString.replace("\\n","\n").replace("\\,",",").replace("Â·","").strip()
 	#if result.startswith("meet"):
 		#print("AAA" + result + "BBB")
 	return(result)
 
+# A basic iCal parser.
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
 	iCalData = {}
@@ -74,7 +83,9 @@ def parseICalFile(theFilename):
 				if eventLength.days == 0:
 					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
 	iCalHandle.close()
-	
+
+# Extract the given DOCX file to a given temporary folder.
+# Reads and returns the contents of the "document.xml" contained in the DOCX file.
 def extractDocx(theFilename, destinationPath):
 	templateDocx = zipfile.ZipFile(theFilename, "r")
 	templateDocx.extractall(destinationPath)
@@ -84,6 +95,7 @@ def extractDocx(theFilename, destinationPath):
 	textHandle.close()
 	return(docxText)
 
+# Turns the contents of the given folder into a DOCX file. Deletes the source folder when done.
 def compressDocx(sourcePath, theFilename):
 	theDocx = zipfile.ZipFile(sys.argv[6], "w")
 	for root, dirs, files in os.walk(sourcePath):
@@ -92,40 +104,49 @@ def compressDocx(sourcePath, theFilename):
 	theDocx.close()
 	shutil.rmtree(sourcePath)
 
+# Writes a file to the given path.
 def putFile(thePath, theData):
 	textHandle = open(thePath, "w")
 	textHandle.write(theData)
 	textHandle.close()
 
+# Check arguments, print a usage message if needed.
 if len(sys.argv) == 1:
 	print("DOCX Merge - merges data into DOCX templates. Usage:")
 	print("merge.py --week-to-view startDate noOfWeeks data.ics template.docx output.docx")
 	sys.exit(0)
-	
+
+# The user wants a week-to-view calendar.
 if sys.argv[1] == "--week-to-view":
 	if len(sys.argv) == 7:
+		# Check the start date is a Monday.
 		startDate = datetime.datetime.strptime(sys.argv[2], "%Y%m%d")
 		if not startDate.weekday() == 0:
 			print("ERROR: Start date is not a Monday.")
 			sys.exit(0)
+		# Figure out the number of weeks to produce a calendar for.
 		noOfWeeks = int(sys.argv[3])
+		# Read the calendar data.
 		parseICalFile(sys.argv[4])
 		
+		# The python-docx library doesn't have a function to duplicate pages, so we do that part ourselves by duplicating the main body of XML from
+		# the "document.xml" contained in the DOCX file.
 		docxText = extractDocx(sys.argv[5], TEMPLATETEMP)
 		bodyStart = docxText.find("<w:body>")+8
 		bodyEnd = docxText.find("</w:body>")
 		newDocxText = docxText[:bodyStart]
+		# Copy the main body text once for each week the user wants to show. Might be multiple pages.
 		for week in range(0, noOfWeeks):
 			weekToViewText = docxText[bodyStart:bodyEnd]
 			for weekDay in range(0, 7):
 				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "}}", "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}")
 			newDocxText = newDocxText + weekToViewText
+		# Re-write the content back to the output location.
 		newDocxText = newDocxText + docxText[bodyEnd:]
 		putFile(TEMPLATETEMP + "word/document.xml", newDocxText)
 		compressDocx(TEMPLATETEMP, sys.argv[6])
 		
-		
-		
+		# Now, read the output file again with the python-docx library.
 		templateDocx = docx.Document(sys.argv[6])
 		for week in range(0, noOfWeeks):
 			for weekDay in range(0, 7):
@@ -146,6 +167,7 @@ if sys.argv[1] == "--week-to-view":
 							for paragraph in cell.paragraphs:
 								if dayString in paragraph.text:
 									paragraph.text = dayContents
+		# Write out the final version of the DOCX file.
 		templateDocx.save(sys.argv[6])
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
