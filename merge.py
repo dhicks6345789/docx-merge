@@ -5,6 +5,8 @@ import shutil
 import zipfile
 import datetime
 
+import docx
+
 # DOCX Merge - a utility to do document merges with DOCX files.
 
 # Possible states for the iCal parser.
