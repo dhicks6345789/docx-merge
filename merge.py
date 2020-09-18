@@ -110,8 +110,8 @@ if sys.argv[1] == "--week-to-view":
 				dayXMLText = ""
 				for dayLine in dayContents.strip().split("\n"):
 					dayXMLText = dayXMLText + "<w:t xmlns:w=\"http://schemas.microsoft.com/office/word/2003/wordml\">"
-            				dayXMLText = dayXMLText + dayLine
-            				dayXMLText = dayXMLText + "</w:t>"
+					dayXMLText = dayXMLText + dayLine
+					dayXMLText = dayXMLText + "</w:t>"
 				weekToViewText = weekToViewText.replace(dayString, dayXMLText)
 			newDocxText = newDocxText + weekToViewText.replace("\n","NEWLINE")
 		newDocxText = newDocxText + docxText[bodyEnd:]
