@@ -115,10 +115,11 @@ if sys.argv[1] == "--week-to-view":
 						print(paragraph.text)
 						#paragraph.text = 'new text containing ocean'
 				for table in templateDocx.tables:
-					for cell in table.cells:
-						for paragraph in cell.paragraphs:
-							if dayString in paragraph.text:
-								print(paragraph.text)
+					for row in table.rows:
+						for cell in row.cells:
+							for paragraph in cell.paragraphs:
+								if dayString in paragraph.text:
+									print(paragraph.text)
 				#dayXMLText = dayContents.strip()
 				##for dayLine in dayContents.strip().split("\n"):
 				##	dayXMLText = dayXMLText + "<w:t xmlns:w=\"http://schemas.microsoft.com/office/word/2003/wordml\">"
