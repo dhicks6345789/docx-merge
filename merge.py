@@ -89,17 +89,18 @@ if sys.argv[1] == "--week-to-view":
 		noOfWeeks = int(sys.argv[3])
 		parseICalFile(sys.argv[4])
 		
-		templateDocx = zipfile.ZipFile(sys.argv[5], "r")
-		templateDocx.extractall("templateTemp")
-		templateDocx.close()
-		textHandle = open(TEMPLATETEMP + "word/document.xml")
-		docxText = str(textHandle.read())
-		textHandle.close()
-		bodyStart = docxText.find("<w:body>")+8
-		bodyEnd = docxText.find("</w:body>")
-		newDocxText = docxText[:bodyStart]
+		#templateDocx = zipfile.ZipFile(sys.argv[5], "r")
+		#templateDocx.extractall("templateTemp")
+		#templateDocx.close()
+		templateDocx = docx.Document(sys.argv[5])
+		#textHandle = open(TEMPLATETEMP + "word/document.xml")
+		#docxText = str(textHandle.read())
+		#textHandle.close()
+		#bodyStart = docxText.find("<w:body>")+8
+		#bodyEnd = docxText.find("</w:body>")
+		#newDocxText = docxText[:bodyStart]
 		for week in range(0, noOfWeeks):
-			weekToViewText = docxText[bodyStart:bodyEnd]
+			#weekToViewText = docxText[bodyStart:bodyEnd]
 			for weekDay in range(0, 7):
 				dayContents = ""
 				dayString = "{{" + DAYNAMES[weekDay] + "1}}"
@@ -109,24 +110,29 @@ if sys.argv[1] == "--week-to-view":
 						if today.day in calendar[today.year][today.month].keys():
 							for dayItem in calendar[today.year][today.month][today.day]:
 								dayContents = dayContents + dayItem + "\n"
-				dayXMLText = dayContents.strip()
-				#for dayLine in dayContents.strip().split("\n"):
-				#	dayXMLText = dayXMLText + "<w:t xmlns:w=\"http://schemas.microsoft.com/office/word/2003/wordml\">"
-				#	dayXMLText = dayXMLText + dayLine
-				#	dayXMLText = dayXMLText + "</w:t>"
-				weekToViewText = weekToViewText.replace(dayString, dayXMLText)
-			newDocxText = newDocxText + weekToViewText
-		newDocxText = newDocxText + docxText[bodyEnd:]
-		textHandle = open(TEMPLATETEMP + "word/document.xml", "w")
-		textHandle.write(newDocxText)
-		textHandle.close()
+				for paragraph in templateDocx.paragraphs:
+					if dayString in paragraph.text:
+						print(paragraph.text)
+						#paragraph.text = 'new text containing ocean'
+				#dayXMLText = dayContents.strip()
+				##for dayLine in dayContents.strip().split("\n"):
+				##	dayXMLText = dayXMLText + "<w:t xmlns:w=\"http://schemas.microsoft.com/office/word/2003/wordml\">"
+				##	dayXMLText = dayXMLText + dayLine
+				##	dayXMLText = dayXMLText + "</w:t>"
+				#weekToViewText = weekToViewText.replace(dayString, dayXMLText)
+			#newDocxText = newDocxText + weekToViewText
+		#newDocxText = newDocxText + docxText[bodyEnd:]
+		#textHandle = open(TEMPLATETEMP + "word/document.xml", "w")
+		#textHandle.write(newDocxText)
+		#textHandle.close()
 		
-		templateDocx = zipfile.ZipFile(sys.argv[6], "w")
-		for root, dirs, files in os.walk("templateTemp/"):
-			for file in files:
-				templateDocx.write(os.path.join(root, file), os.path.join(root, file)[len(TEMPLATETEMP):])
-		templateDocx.close()
+		#templateDocx = zipfile.ZipFile(sys.argv[6], "w")
+		#for root, dirs, files in os.walk("templateTemp/"):
+			#for file in files:
+				#templateDocx.write(os.path.join(root, file), os.path.join(root, file)[len(TEMPLATETEMP):])
+		#templateDocx.close()
 		
-		shutil.rmtree(TEMPLATETEMP)
+		#shutil.rmtree(TEMPLATETEMP)
+		templateDocx.save(sys.argv[6])
 	else:
 		print("ERROR: week-to-view - incorrect number of parameters.")
