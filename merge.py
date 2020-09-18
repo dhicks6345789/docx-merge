@@ -113,7 +113,7 @@ if sys.argv[1] == "--week-to-view":
 				#	dayXMLText = dayXMLText + dayLine
 				#	dayXMLText = dayXMLText + "</w:t>"
 				weekToViewText = weekToViewText.replace(dayString, dayXMLText)
-			newDocxText = newDocxText + weekToViewText.replace("\n","NEWLINE")
+			newDocxText = newDocxText + weekToViewText
 		newDocxText = newDocxText + docxText[bodyEnd:]
 		textHandle = open(TEMPLATETEMP + "word/document.xml", "w")
 		textHandle.write(newDocxText)
