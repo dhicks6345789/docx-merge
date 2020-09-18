@@ -90,7 +90,7 @@ def compressDocx(sourcePath, theFilename):
 		for file in files:
 			theDocx.write(os.path.join(root, file), os.path.join(root, file)[len(sourcePath):])
 	theDocx.close()
-	shutil.rmtree(sourcePath)
+	#shutil.rmtree(sourcePath)
 
 def putFile(thePath, theData):
 	textHandle = open(thePath, "w")
