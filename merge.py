@@ -46,8 +46,8 @@ def addCalendarItem(theYear, theMonth, theDay, theItem):
 	
 def normaliseString(theString):
 	result = theString.replace("\\n","\n").replace("\\,",",").replace("Â·","").strip()
-	if result.startswith("meet"):
-		print("AAA" + result + "BBB")
+	#if result.startswith("meet"):
+		#print("AAA" + result + "BBB")
 	return(result)
 
 def parseICalFile(theFilename):
