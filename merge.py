@@ -154,7 +154,7 @@ if sys.argv[1] == "--week-to-view":
 					if today.month in calendar[today.year].keys():
 						if today.day in calendar[today.year][today.month].keys():
 							for dayItem in calendar[today.year][today.month][today.day]:
-								dayContents = dayContents + dayItem + "\n\n"
+								dayContents = dayContents + dayItem.replace("\n",", ") + "\n"
 				dayContents = dayContents.strip()
 				dayString = "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}"
 				for paragraph in templateDocx.paragraphs:
