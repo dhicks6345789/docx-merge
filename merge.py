@@ -18,8 +18,8 @@ ICALSTART = 0
 ICALINVEVENT = 1
 
 # Used for placeholder names in calendars.
-DAYNAMES = ["MO","TU","WE","TH","FR","SA","SU"}
-DAYTITLES = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"}
+DAYNAMES = ["MO","TU","WE","TH","FR","SA","SU"]
+DAYTITLES = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
 
 # The date/time format string used in iCal files.
 DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
