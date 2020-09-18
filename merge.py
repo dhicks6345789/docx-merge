@@ -157,14 +157,16 @@ if sys.argv[1] == "--week-to-view":
 						if today.day in calendar[today.year][today.month].keys():
 							for dayItem in calendar[today.year][today.month][today.day]:
 								dayContents = dayContents + dayItem + "\n"
-				#for paragraph in templateDocx.paragraphs:
-					#if dayString in paragraph.text:
-						#print(paragraph.text)
+				dayContents = dayContents.strip()
+				dayString = "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}"
+				for paragraph in templateDocx.paragraphs:
+					if dayString in paragraph.text:
+						paragraph.text = dayContents
 				for table in templateDocx.tables:
 					for row in table.rows:
 						for cell in row.cells:
 							for paragraph in cell.paragraphs:
-								if "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}" in paragraph.text:
+								if dayString in paragraph.text:
 									paragraph.text = dayContents
 		# Write out the final version of the DOCX file.
 		templateDocx.save(sys.argv[6])
