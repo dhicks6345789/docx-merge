@@ -111,6 +111,7 @@ if sys.argv[1] == "--week-to-view":
 							for dayItem in calendar[today.year][today.month][today.day]:
 								dayContents = dayContents + dayItem + "\n"
 				for paragraph in templateDocx.paragraphs:
+					print(paragraph.text)
 					if dayString in paragraph.text:
 						print(paragraph.text)
 						#paragraph.text = 'new text containing ocean'
