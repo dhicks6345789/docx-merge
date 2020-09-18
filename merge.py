@@ -53,8 +53,12 @@ def addCalendarItem(theYear, theMonth, theDay, theItem):
 
 # Strip unwanted characters from strings.
 def normaliseString(theString):
-	result = theString.replace("\\n","\n").replace("\\,",",").replace("Â·","").replace(" \n","\n").strip()
-	return(result)
+	result = ""
+	for resultItem in theString.replace("\\n","\n").replace("\\,",",").replace("Â·","").split("\n"):
+		result = result + resultItem.strip() + "\n"
+	if result.startswith("meet"):
+		print(result)
+	return(result.strip())
 
 # A basic iCal parser.
 def parseICalFile(theFilename):
