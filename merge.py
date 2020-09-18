@@ -126,7 +126,7 @@ if sys.argv[1] == "--week-to-view":
 		
 		
 		
-		templateDocx = docx.Document(sys.argv[5])
+		templateDocx = docx.Document(sys.argv[6])
 		for week in range(0, noOfWeeks):
 			for weekDay in range(0, 7):
 				dayContents = ""
