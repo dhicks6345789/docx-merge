@@ -79,7 +79,7 @@ def parseICalFile(theFilename):
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
 			iCalData["Description"] = iCalLine.split(":")[1]
 			lastField = "Description"
-		elif iCalState == ICALINVEVENT and iCalLine.startswith(" "):
+		elif iCalState == ICALINVEVENT and iCalLine.startswith(" ") and lastField in iCalData.keys():
 			iCalData[lastField] = iCalData[lastField] + iCalLine[1:]
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
