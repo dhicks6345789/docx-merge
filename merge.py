@@ -89,7 +89,7 @@ def compressDocx(sourcePath, theFilename):
 	for root, dirs, files in os.walk(sourcePath):
 		for file in files:
 			theDocx.write(os.path.join(root, file), os.path.join(root, file)[len(sourcePath):])
-		theDocx.close()
+	theDocx.close()
 	shutil.rmtree(sourcePath)
 
 def putFile(thePath, theData):
