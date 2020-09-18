@@ -108,7 +108,7 @@ if sys.argv[1] == "--week-to-view":
 							for dayItem in calendar[today.year][today.month][today.day]:
 								dayContents = dayContents + dayItem + "\n"
 				weekToViewText = weekToViewText.replace(dayString, dayContents.strip())
-			newDocxText = newDocxText + weekToViewText.replace("\n","<w:br/>")
+			newDocxText = newDocxText + weekToViewText.replace("\n","NEWLINE")
 		newDocxText = newDocxText + docxText[bodyEnd:]
 		textHandle = open(TEMPLATETEMP + "word/document.xml", "w")
 		textHandle.write(newDocxText)
