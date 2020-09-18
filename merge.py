@@ -66,8 +66,8 @@ def parseICalFile(theFilename):
 	iCalState = ICALSTART
 	iCalData = {}
 	iCalHandle = open(theFilename)
+	lastField = ""
 	for iCalLine in iCalHandle.readlines():
-		lastField = ""
 		iCalLine = iCalLine.strip()
 		if iCalState == ICALSTART and iCalLine.startswith("BEGIN:VEVENT"):
 			iCalState = ICALINVEVENT
