@@ -84,11 +84,11 @@ def parseICalFile(theFilename):
 			iCalState = ICALINVEVENT
 			iCalData = {}
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
-			iCalData["StartDate"] = iCalLine.split(":")[1]
+			iCalData["StartDate"] = iCalLine.split(":",1)[1]
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
-			iCalData["EndDate"] = iCalLine.split(":")[1]
+			iCalData["EndDate"] = iCalLine.split(":",1)[1]
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
-			iCalData["Description"] = iCalLine.split(":")[1]
+			iCalData["Description"] = iCalLine.split(":",1)[1]
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
 			if "StartDate" in iCalData.keys() and "EndDate" in iCalData.keys():
