@@ -21,9 +21,6 @@ ICALINVEVENT = 1
 DAYNAMES = ["MO","TU","WE","TH","FR","SA","SU"]
 DAYTITLES = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
 
-# The date/time format string used in iCal files.
-DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
-
 # DOCX files are ZIP files - we need a folder to unzip the contenst into if we want to modify a contained file.
 TEMPLATETEMP = "templateTemp/"
 
@@ -85,22 +82,25 @@ def parseICalFile(theFilename):
 		if iCalState == ICALINVEVENT:
 			iCalBlock = iCalBlock + iCalLine + "\n"
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
-			iCalData["StartDate"] = iCalLine.split(":",1)[1]
+			iCalData["StartDate"] = iCalLine.split(":",1)[1].split("T")[0]
+			iCalData["StartTime"] = iCalLine.split(":",1)[1].split("T")[1].split("Z")[0]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART;VALUE=DATE:"):
-			iCalData["StartDate"] = iCalLine.split(":",1)[1]+"T000000Z"
+			iCalData["StartDate"] = iCalLine.split(":",1)[1]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
-			iCalData["EndDate"] = iCalLine.split(":",1)[1]
+			iCalData["EndDate"] = iCalLine.split(":",1)[1].split("T")[0]
+			iCalData["EndTime"] = iCalLine.split(":",1)[1].split("T")[1].split("Z")[0]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND;VALUE=DATE:"):
-			iCalData["EndDate"] = iCalLine.split(":",1)[1]+"T000000Z"
+			iCalData["EndDate"] = iCalLine.split(":",1)[1]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
 			iCalData["Description"] = iCalLine.split(":",1)[1]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
+			# DATETIMEFORMAT = "%Y%m%dT%H%M%SZ"
 			if "StartDate" in iCalData.keys():
 				if not "EndDate" in iCalData.keys():
 					iCalData["EndDate"] = iCalData["StartDate"]
-				startDate = datetime.datetime.strptime(iCalData["StartDate"], DATETIMEFORMAT)
-				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
+				startDate = datetime.datetime.strptime(iCalData["StartDate"], "%Y%m%d")
+				endDate = datetime.datetime.strptime(iCalData["EndDate"], "%Y%m%d")
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
 					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
