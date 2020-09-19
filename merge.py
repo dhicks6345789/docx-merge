@@ -81,6 +81,7 @@ def parseICalFile(theFilename):
 		if iCalState == ICALSTART and iCalLine.startswith("BEGIN:VEVENT"):
 			iCalState = ICALINVEVENT
 			iCalData = {}
+			iCalBlock = ""
 		if iCalState == ICALINVEVENT:
 			iCalBlock = iCalBlock + iCalLine + "\n"
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
@@ -95,15 +96,16 @@ def parseICalFile(theFilename):
 			iCalData["Description"] = iCalLine.split(":",1)[1]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
-			if "StartDate" in iCalData.keys() and "EndDate" in iCalData.keys():
+			if "StartDate" in iCalData.keys():
+				if not "EndDate" in iCalData.keys():
+					iCalData["EndDate"] = iCalData["StartDate"]
 				startDate = datetime.datetime.strptime(iCalData["StartDate"], DATETIMEFORMAT)
 				endDate = datetime.datetime.strptime(iCalData["EndDate"], DATETIMEFORMAT)
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
 					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
 			else:
-				print(iCalBlock)
-			iCalBlock = ""
+				print("Unhandled event:\n" + iCalBlock.strip())
 
 # Extract the given DOCX file to a given temporary folder.
 # Reads and returns the contents of the "document.xml" contained in the DOCX file.
