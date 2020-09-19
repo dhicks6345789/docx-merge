@@ -67,7 +67,7 @@ def parseICalFile(theFilename):
 	iCalLines = []
 	iCalHandle = open(theFilename)
 	for iCalLine in iCalHandle:
-		if iCalLine.startswith[" "]:
+		if iCalLine.startswith(" "):
 			iCalLines[-1] = iCalLines[-1] + iCalLine[1:].rstrip()
 		else:
 			iCalLines.append(iCalLine.rstrip())
