@@ -108,7 +108,7 @@ def parseICalFile(theFilename):
 					timeString = ""
 					if "StartTime" in iCalData.keys():
 						startTime = datetime.datetime.strptime(iCalData["StartTime"], "%H%M%S")
-						timeString = str(startTime.hour) + ": "
+						timeString = str(startTime.hour) + ":" + str(startTime.minute) + ": "
 					print(timeString + normaliseString(iCalData["Description"]))
 					addCalendarItem(currentDate.year, currentDate.month, currentDate.day, timeString + normaliseString(iCalData["Description"]))
 					currentDate = currentDate + ONEDAY
