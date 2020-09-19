@@ -64,6 +64,8 @@ def parseICalFile(theFilename):
 	iCalState = ICALSTART
 	iCalData = {}
 	
+	# Read the iCal file in as a bunch of text entries. We don't just use readlines() as some entries can be split over multiple lines, so we have to detect those
+	# and stick them back together as we go along.
 	iCalLines = []
 	iCalHandle = open(theFilename)
 	for iCalLine in iCalHandle:
@@ -72,6 +74,8 @@ def parseICalFile(theFilename):
 		else:
 			iCalLines.append(iCalLine.rstrip())
 	iCalHandle.close()
+	
+	# Now, parse the lines read above into calendar data.
 	for iCalLine in iCalLines:
 		if iCalState == ICALSTART and iCalLine.startswith("BEGIN:VEVENT"):
 			iCalState = ICALINVEVENT
