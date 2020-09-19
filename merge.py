@@ -63,30 +63,26 @@ def normaliseString(theString):
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
 	iCalData = {}
+	
+	iCalLines = []
 	iCalHandle = open(theFilename)
-	lastField = ""
-	for iCalLine in iCalHandle.readlines():
-		iCalLine = iCalLine.rstrip()
+	for iCalLine in iCalHandle:
+		if iCalLine.startswith[" "]:
+			iCalLines[-1] = iCalLines[-1] + iCalLine[1:].rstrip()
+		else:
+			iCalLines.append(iCalLine.rstrip())
+	iCalHandle.close()
+	for iCalLine in iCalLines:
 		if iCalState == ICALSTART and iCalLine.startswith("BEGIN:VEVENT"):
 			iCalState = ICALINVEVENT
 			iCalData = {}
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
 			iCalData["StartDate"] = iCalLine.split(":")[1]
-			lastField = ""
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
 			iCalData["EndDate"] = iCalLine.split(":")[1]
-			lastField = ""
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
 			iCalData["Description"] = iCalLine.split(":")[1]
-			lastField = "Description"
-		elif iCalState == ICALINVEVENT and iCalLine.startswith("UID:"):
-			lastField = "UID"
-		elif iCalState == ICALINVEVENT and iCalLine.startswith("SUMMARY:"):
-			lastField = "Summary"
-		elif iCalState == ICALINVEVENT and iCalLine.startswith(" ") and lastField in iCalData.keys():
-			iCalData[lastField] = iCalData[lastField] + iCalLine[1:]
 		elif iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
-			lastField = ""
 			iCalState = ICALSTART
 			if "StartDate" in iCalData.keys() and "EndDate" in iCalData.keys():
 				startDate = datetime.datetime.strptime(iCalData["StartDate"], DATETIMEFORMAT)
@@ -94,7 +90,6 @@ def parseICalFile(theFilename):
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
 					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
-	iCalHandle.close()
 
 # Extract the given DOCX file to a given temporary folder.
 # Reads and returns the contents of the "document.xml" contained in the DOCX file.
