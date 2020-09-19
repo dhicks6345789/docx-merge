@@ -67,7 +67,7 @@ def parseICalFile(theFilename):
 	# Read the iCal file in as a bunch of text entries. We don't just use readlines() as some entries can be split over multiple lines, so we have to detect those
 	# and stick them back together as we go along.
 	iCalLines = []
-	iCalHandle = open(theFilename)
+	iCalHandle = open(theFilename, encoding="utf-8")
 	for iCalLine in iCalHandle:
 		if iCalLine.startswith(" "):
 			iCalLines[-1] = iCalLines[-1] + iCalLine[1:].rstrip()
