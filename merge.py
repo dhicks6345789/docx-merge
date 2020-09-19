@@ -105,7 +105,7 @@ def parseICalFile(theFilename):
 				if eventLength.days == 0:
 					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
 				else:
-					print("Code goes here - deal with multi-day events.")
+					print("Unhandled multi-day event:\n" + iCalBlock.strip())
 			else:
 				print("Unhandled event:\n" + iCalBlock.strip())
 
