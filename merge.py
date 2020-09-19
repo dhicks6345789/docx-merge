@@ -76,7 +76,7 @@ def parseICalFile(theFilename):
 	iCalHandle.close()
 	
 	# Now, parse the lines read above into calendar data.
-	icalBlock = ""
+	iCalBlock = ""
 	for iCalLine in iCalLines:
 		if iCalState == ICALSTART and iCalLine.startswith("BEGIN:VEVENT"):
 			iCalState = ICALINVEVENT
