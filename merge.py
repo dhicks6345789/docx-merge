@@ -76,17 +76,20 @@ def parseICalFile(theFilename):
 	iCalHandle.close()
 	
 	# Now, parse the lines read above into calendar data.
+	icalBlock = ""
 	for iCalLine in iCalLines:
 		if iCalState == ICALSTART and iCalLine.startswith("BEGIN:VEVENT"):
 			iCalState = ICALINVEVENT
 			iCalData = {}
-		elif iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
+		if iCalState == ICALINVEVENT:
+			iCalBlock = iCalBlock + iCalLine + "\n"
+		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
 			iCalData["StartDate"] = iCalLine.split(":",1)[1]
-		elif iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
+		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
 			iCalData["EndDate"] = iCalLine.split(":",1)[1]
-		elif iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
+		if iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
 			iCalData["Description"] = iCalLine.split(":",1)[1]
-		elif iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
+		if iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
 			if "StartDate" in iCalData.keys() and "EndDate" in iCalData.keys():
 				startDate = datetime.datetime.strptime(iCalData["StartDate"], DATETIMEFORMAT)
@@ -94,6 +97,9 @@ def parseICalFile(theFilename):
 				eventLength = endDate - startDate
 				if eventLength.days == 0:
 					addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
+			else:
+				print(iCalBlock)
+			iCalBlock = ""
 
 # Extract the given DOCX file to a given temporary folder.
 # Reads and returns the contents of the "document.xml" contained in the DOCX file.
