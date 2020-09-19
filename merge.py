@@ -24,6 +24,8 @@ DAYTITLES = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sund
 # DOCX files are ZIP files - we need a folder to unzip the contenst into if we want to modify a contained file.
 TEMPLATETEMP = "templateTemp/"
 
+ONEDAY = datetime.timedelta(days=1)
+
 # A place to put calendar data read from an iCal file.
 calendar = {}
 
@@ -102,11 +104,10 @@ def parseICalFile(theFilename):
 				startDate = datetime.datetime.strptime(iCalData["StartDate"], "%Y%m%d")
 				endDate = datetime.datetime.strptime(iCalData["EndDate"], "%Y%m%d")
 				eventLength = endDate - startDate
+				currentDate = startDate
 				for eventDay in range(0, eventLength.days+1):
-					print(eventDay)
-					#addCalendarItem(startDate.year, startDate.month, startDate.day, normaliseString(iCalData["Description"]))
-				#else:
-					#print("Unhandled multi-day event:\n" + iCalBlock.strip())
+					addCalendarItem(currentDate.year, currentDate.month, currentDate.day, normaliseString(iCalData["Description"]))
+					currentDate = currentDate + ONEDAY
 			else:
 				print("Unhandled event:\n" + iCalBlock.strip())
 
