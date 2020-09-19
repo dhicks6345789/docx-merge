@@ -55,7 +55,8 @@ def addCalendarItem(theYear, theMonth, theDay, theItem):
 # Strip unwanted characters from strings.
 def normaliseString(theString):
 	result = ""
-	for resultItem in theString.replace("\\n","\n").replace("\\,",",").replace("Â·","").split("\n"):
+	#for resultItem in theString.replace("\\n","\n").replace("\\,",",").replace("Â·","").split("\n"):
+	for resultItem in theString.split("\n"):
 		result = result + resultItem.strip() + "\n"
 	return(result.strip())
 
