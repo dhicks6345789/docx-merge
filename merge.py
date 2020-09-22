@@ -68,11 +68,10 @@ def time24To12Hour(theString):
 	result = theString
 	matchResult = re.match("(\d\d):(\d\d): ", theString)
 	if not matchResult == None:
-		print("FOUND")
-		hour = int(matchResult.group(0))
+		hour = int(matchResult.group(1))
 		minuteString = ""
-		if not matchResult.group(1) == "00":
-			minuteString = ":" + str(int(matchResult.group(0)))
+		if not matchResult.group(2) == "00":
+			minuteString = ":" + str(int(matchResult.group(1)))
 		if hour == 12 and matchResult.group(0) == "00":
 			result = "Midday: "
 		elif hour > 12:
@@ -80,8 +79,6 @@ def time24To12Hour(theString):
 		else:
 			result = str(hour) + minuteString + "am: "
 		result = result + theString[7:]
-	else:
-		print("NOT")
 	print(result)
 	return(result)
 
