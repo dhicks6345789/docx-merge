@@ -112,7 +112,10 @@ def parseICalFile(theFilename):
 						iCalData["EndDate"] = iCalData["StartDate"]
 				timeString = ""
 				if "StartTime" in iCalData.keys():
-					timeString = unZeroPad(iCalData["StartTime"].strftime("%I")) + ":" + unZeroPad(iCalData["StartTime"].strftime("%M")) + iCalData["StartTime"].strftime("%p") + ": "
+					timeString = unZeroPad(iCalData["StartTime"].strftime("%I"))
+					if not iCalData["StartTime"].minute == 0:
+						timeString = timeString + ":" + unZeroPad(iCalData["StartTime"].strftime("%M"))
+					timeString = timeString + iCalData["StartTime"].strftime("%p").lower() + ": "
 				eventLength = iCalData["EndDate"] - iCalData["StartDate"]
 				currentDate = iCalData["StartDate"]
 				for eventDay in range(0, eventLength.days+1):
@@ -196,7 +199,7 @@ if sys.argv[1] == "--week-to-view":
 				if today.year in calendar.keys():
 					if today.month in calendar[today.year].keys():
 						if today.day in calendar[today.year][today.month].keys():
-							for dayItem in calendar[today.year][today.month][today.day]:
+							for dayItem in sorted(calendar[today.year][today.month][today.day]):
 								dayContents = dayContents + dayItem.replace("\n",", ") + "\n"
 				dayContents = dayContents.strip()
 				dayString = "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}"
