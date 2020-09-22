@@ -79,7 +79,6 @@ def time24To12Hour(theString):
 		else:
 			result = str(hour) + minuteString + "am: "
 		result = result + theString[7:]
-	print(result)
 	return(result)
 
 # A basic iCal parser.
