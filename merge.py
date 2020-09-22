@@ -87,7 +87,7 @@ def parseICalFile(theFilename):
 			iCalData["StartDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d")
 			iCalData["StartTime"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S")
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART;VALUE=DATE:"):
-			iCalData["StartDate"] = datetime.datetime.strptime(iCalData["StartDate"] = iCalLine.split(":",1)[1], "%Y%m%d")
+			iCalData["StartDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d")
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
 			iCalData["EndDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d")
 			iCalData["EndTime"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S")
