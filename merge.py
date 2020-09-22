@@ -63,6 +63,14 @@ def unZeroPad(theString):
 		return(theString[1:])
 	return(theString)
 
+def time24To12Hour(theString):
+	print(theString)
+	#timeString = unZeroPad(iCalData["StartTime"].strftime("%I"))
+	#if not iCalData["StartTime"].minute == 0:
+		#timeString = timeString + ":" + unZeroPad(iCalData["StartTime"].strftime("%M"))
+	#timeString = timeString + iCalData["StartTime"].strftime("%p").lower() + ": "
+	return(theString)
+
 # A basic iCal parser.
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
@@ -112,11 +120,7 @@ def parseICalFile(theFilename):
 						iCalData["EndDate"] = iCalData["StartDate"]
 				timeString = ""
 				if "StartTime" in iCalData.keys():
-					timeString = iCalData["StartTime"].strftime("%H:%M")
-					#timeString = unZeroPad(iCalData["StartTime"].strftime("%I"))
-					#if not iCalData["StartTime"].minute == 0:
-						#timeString = timeString + ":" + unZeroPad(iCalData["StartTime"].strftime("%M"))
-					#timeString = timeString + iCalData["StartTime"].strftime("%p").lower() + ": "
+					timeString = iCalData["StartTime"].strftime("%H:%M: ")
 				eventLength = iCalData["EndDate"] - iCalData["StartDate"]
 				currentDate = iCalData["StartDate"]
 				for eventDay in range(0, eventLength.days+1):
@@ -201,7 +205,7 @@ if sys.argv[1] == "--week-to-view":
 					if today.month in calendar[today.year].keys():
 						if today.day in calendar[today.year][today.month].keys():
 							for dayItem in sorted(calendar[today.year][today.month][today.day]):
-								dayContents = dayContents + dayItem.replace("\n",", ") + "\n"
+								dayContents = dayContents + time24To12Hour(dayItem.replace("\n",", ")) + "\n"
 				dayContents = dayContents.strip()
 				dayString = "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}"
 				for paragraph in templateDocx.paragraphs:
