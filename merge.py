@@ -66,7 +66,7 @@ def unZeroPad(theString):
 
 def time24To12Hour(theString):
 	result = theString
-	matchResult = re.search("^[\d\d]:[\d\d]: .*", theString)
+	matchResult = re.match("(\d\d):(\d\d): ", theString)
 	if not matchResult == None:
 		print("FOUND")
 		hour = int(matchResult.group(0))
