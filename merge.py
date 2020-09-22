@@ -4,6 +4,7 @@
 
 # Standard libraries.
 import os
+import re
 import sys
 import shutil
 import zipfile
@@ -64,12 +65,26 @@ def unZeroPad(theString):
 	return(theString)
 
 def time24To12Hour(theString):
-	print(theString)
+	result = theString
+	matchResult = re.match("[\d\d]:[\d\d]: ", theString)
+	if not matchResult == None:
+		hour = int(matchResult.group(0))
+		minuteString = ""
+		if not matchResult.group(1) == "00":
+			minuteString = ":" + str(int(matchResult.group(0)))
+		if hour == 12 and matchResult.group(0) == "00":
+			result = "Midday: "
+		elif hour > 12:
+			result = str(hour-12) + minuteString + "pm: "
+		else:
+			result = str(hour) + minuteString + "am: "
+		result = result + theString[7:]
+	print(result)
 	#timeString = unZeroPad(iCalData["StartTime"].strftime("%I"))
 	#if not iCalData["StartTime"].minute == 0:
 		#timeString = timeString + ":" + unZeroPad(iCalData["StartTime"].strftime("%M"))
 	#timeString = timeString + iCalData["StartTime"].strftime("%p").lower() + ": "
-	return(theString)
+	return(result)
 
 # A basic iCal parser.
 def parseICalFile(theFilename):
