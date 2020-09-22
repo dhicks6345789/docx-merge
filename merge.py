@@ -6,12 +6,12 @@
 import os
 import re
 import sys
+import pytz
 import shutil
 import zipfile
 import datetime
 
-theTimezone = datetime.timezone("Europe/London")
-#london_dt = aware_dt.astimezone(pytz.timezone('Europe/London'))
+theTimezone = pytz.timezone("Europe/London")
 
 # The python-docx library, for manipulating DOCX files.
 # Importantly, when installing with pip, that not the "docx" library, that an earlier version - do "pip install python-docx".
