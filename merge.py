@@ -197,7 +197,7 @@ if sys.argv[1] == "--week-to-view":
 		for week in range(0, noOfWeeks):
 			weekToViewText = docxText[bodyStart:bodyEnd]
 			for weekDay in range(0, 7):
-				today = startDate + theTimezone.localize(datetime.timedelta(days=(week*7)+weekDay))
+				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
 				# Find the "title" string for the day.
 				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "TI}}", today.strftime("%A, ") + unZeroPad(today.strftime("%d")) + today.strftime(" %B"))
 				# Find the "content" string for the day.
@@ -213,7 +213,7 @@ if sys.argv[1] == "--week-to-view":
 		for week in range(0, noOfWeeks):
 			for weekDay in range(0, 7):
 				dayContents = ""
-				today = startDate + theTimezone.localize(datetime.timedelta(days=(week*7)+weekDay))
+				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
 				if today.year in calendar.keys():
 					if today.month in calendar[today.year].keys():
 						if today.day in calendar[today.year][today.month].keys():
