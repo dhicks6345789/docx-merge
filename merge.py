@@ -112,10 +112,11 @@ def parseICalFile(theFilename):
 						iCalData["EndDate"] = iCalData["StartDate"]
 				timeString = ""
 				if "StartTime" in iCalData.keys():
-					timeString = unZeroPad(iCalData["StartTime"].strftime("%I"))
-					if not iCalData["StartTime"].minute == 0:
-						timeString = timeString + ":" + unZeroPad(iCalData["StartTime"].strftime("%M"))
-					timeString = timeString + iCalData["StartTime"].strftime("%p").lower() + ": "
+					timeString = iCalData["StartTime"].strftime("%H:%M")
+					#timeString = unZeroPad(iCalData["StartTime"].strftime("%I"))
+					#if not iCalData["StartTime"].minute == 0:
+						#timeString = timeString + ":" + unZeroPad(iCalData["StartTime"].strftime("%M"))
+					#timeString = timeString + iCalData["StartTime"].strftime("%p").lower() + ": "
 				eventLength = iCalData["EndDate"] - iCalData["StartDate"]
 				currentDate = iCalData["StartDate"]
 				for eventDay in range(0, eventLength.days+1):
