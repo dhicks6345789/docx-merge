@@ -84,30 +84,34 @@ def parseICalFile(theFilename):
 		if iCalState == ICALINVEVENT:
 			iCalBlock = iCalBlock + iCalLine + "\n"
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
-			iCalData["StartDate"] = iCalLine.split(":",1)[1].split("T")[0]
-			iCalData["StartTime"] = iCalLine.split(":",1)[1].split("T")[1].split("Z")[0]
+			iCalData["StartDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d")
+			iCalData["StartTime"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S")
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART;VALUE=DATE:"):
-			iCalData["StartDate"] = iCalLine.split(":",1)[1]
+			iCalData["StartDate"] = datetime.datetime.strptime(iCalData["StartDate"] = iCalLine.split(":",1)[1], "%Y%m%d")
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
-			iCalData["EndDate"] = iCalLine.split(":",1)[1].split("T")[0]
-			iCalData["EndTime"] = iCalLine.split(":",1)[1].split("T")[1].split("Z")[0]
+			iCalData["EndDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d")
+			iCalData["EndTime"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S")
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND;VALUE=DATE:"):
-			iCalData["EndDate"] = iCalLine.split(":",1)[1]
+			iCalData["EndDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d")
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
 			iCalData["Description"] = iCalLine.split(":",1)[1]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
 			if "StartDate" in iCalData.keys():
+				# Do we not have an EndDate set? Assume the event lasts one day.
 				if not "EndDate" in iCalData.keys():
 					iCalData["EndDate"] = iCalData["StartDate"]
-				startDate = datetime.datetime.strptime(iCalData["StartDate"], "%Y%m%d")
-				endDate = datetime.datetime.strptime(iCalData["EndDate"], "%Y%m%d")
+				# Does the event not have a start / end time set but seems to last from one day until the next? Simply the event into lasting one day.
+				if iCalData["EndDate"] == (iCalData["StartDate"] + ONEDAY):
+					if not "StartTime" in iCalData.keys() and not "EndTime" in iCalData.keys():
+						iCalData["EndDate"] = iCalData["StartDate"]
 				timeString = ""
 				if "StartTime" in iCalData.keys():
-					startTime = datetime.datetime.strptime(iCalData["StartTime"], "%H%M%S")
-					timeString = str(startTime.hour) + ":" + str(startTime.minute) + ": "
-				eventLength = endDate - startDate
-				currentDate = startDate
+					timeString = str(iCalData["StartTime"].hour) + ":" + str(iCalData["StartTime"].minute) + ": "
+				else:
+					timeString = "All day: "
+				eventLength = iCalData["EndDate"] - iCalData["StartDate"]
+				currentDate = iCalData["StartDate"]
 				for eventDay in range(0, eventLength.days+1):
 					addCalendarItem(currentDate.year, currentDate.month, currentDate.day, timeString + normaliseString(iCalData["Description"]))
 					currentDate = currentDate + ONEDAY
