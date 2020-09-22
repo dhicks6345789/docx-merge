@@ -71,7 +71,7 @@ def time24To12Hour(theString):
 		hour = int(matchResult.group(1))
 		minuteString = ""
 		if not matchResult.group(2) == "00":
-			minuteString = ":" + str(int(matchResult.group(1)))
+			minuteString = ":" + str(int(matchResult.group(2)))
 		if hour == 12 and matchResult.group(0) == "00":
 			result = "Midday: "
 		elif hour > 12:
