@@ -68,6 +68,7 @@ def time24To12Hour(theString):
 	result = theString
 	matchResult = re.match("[\d\d]:[\d\d]: ", theString)
 	if not matchResult == None:
+		print("FOUND")
 		hour = int(matchResult.group(0))
 		minuteString = ""
 		if not matchResult.group(1) == "00":
@@ -80,10 +81,6 @@ def time24To12Hour(theString):
 			result = str(hour) + minuteString + "am: "
 		result = result + theString[7:]
 	print(result)
-	#timeString = unZeroPad(iCalData["StartTime"].strftime("%I"))
-	#if not iCalData["StartTime"].minute == 0:
-		#timeString = timeString + ":" + unZeroPad(iCalData["StartTime"].strftime("%M"))
-	#timeString = timeString + iCalData["StartTime"].strftime("%p").lower() + ": "
 	return(result)
 
 # A basic iCal parser.
