@@ -58,6 +58,11 @@ def normaliseString(theString):
 		result = result + resultItem.strip() + "\n"
 	return(result.strip())
 
+def unZeroPad(theString):
+	if theString[0] == "0":
+		return(theString[1:])
+	return(theString)
+
 # A basic iCal parser.
 def parseICalFile(theFilename):
 	iCalState = ICALSTART
@@ -107,9 +112,7 @@ def parseICalFile(theFilename):
 						iCalData["EndDate"] = iCalData["StartDate"]
 				timeString = ""
 				if "StartTime" in iCalData.keys():
-					timeString = str(iCalData["StartTime"].hour) + ":" + str(iCalData["StartTime"].minute) + ": "
-				else:
-					timeString = "All day: "
+					timeString = unZeroPad(iCalData["StartTime"].strftime("%I)) + ":" + unZeroPad(iCalData["StartTime"].strftime("%M")) + iCalData["StartTime"].strftime("%p") + ": "
 				eventLength = iCalData["EndDate"] - iCalData["StartDate"]
 				currentDate = iCalData["StartDate"]
 				for eventDay in range(0, eventLength.days+1):
@@ -143,12 +146,7 @@ def putFile(thePath, theData):
 	textHandle = open(thePath, "w")
 	textHandle.write(theData)
 	textHandle.close()
-	
-def unZeroPad(theString):
-	if theString[0] == "0":
-		return(theString[1:])
-	return(theString)
-
+											      
 # Check arguments, print a usage message if needed.
 if len(sys.argv) == 1:
 	print("DOCX Merge - merges data into DOCX templates. Usage:")
