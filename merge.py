@@ -110,15 +110,15 @@ def parseICalFile(theFilename):
 		if iCalState == ICALINVEVENT:
 			iCalBlock = iCalBlock + iCalLine + "\n"
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
-			iCalData["StartDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d")
-			iCalData["StartTime"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S")
+			iCalData["StartDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d"))
+			iCalData["StartTime"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S"))
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART;VALUE=DATE:"):
-			iCalData["StartDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d")
+			iCalData["StartDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d"))
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
-			iCalData["EndDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d")
-			iCalData["EndTime"] = datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S")
+			iCalData["EndDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d"))
+			iCalData["EndTime"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S"))
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND;VALUE=DATE:"):
-			iCalData["EndDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d")
+			iCalData["EndDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d"))
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
 			iCalData["Description"] = iCalLine.split(":",1)[1]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
@@ -178,7 +178,7 @@ if len(sys.argv) == 1:
 if sys.argv[1] == "--week-to-view":
 	if len(sys.argv) == 7:
 		# Check the start date is a Monday.
-		startDate = datetime.datetime.strptime(sys.argv[2], "%Y%m%d")
+		startDate = theTimezone.localize(datetime.datetime.strptime(sys.argv[2], "%Y%m%d"))
 		if not startDate.weekday() == 0:
 			print("ERROR: Start date is not a Monday.")
 			sys.exit(0)
@@ -197,7 +197,7 @@ if sys.argv[1] == "--week-to-view":
 		for week in range(0, noOfWeeks):
 			weekToViewText = docxText[bodyStart:bodyEnd]
 			for weekDay in range(0, 7):
-				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
+				today = startDate + theTimezone.localize(datetime.timedelta(days=(week*7)+weekDay))
 				# Find the "title" string for the day.
 				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "TI}}", today.strftime("%A, ") + unZeroPad(today.strftime("%d")) + today.strftime(" %B"))
 				# Find the "content" string for the day.
@@ -213,7 +213,7 @@ if sys.argv[1] == "--week-to-view":
 		for week in range(0, noOfWeeks):
 			for weekDay in range(0, 7):
 				dayContents = ""
-				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
+				today = startDate + theTimezone.localize(datetime.timedelta(days=(week*7)+weekDay))
 				if today.year in calendar.keys():
 					if today.month in calendar[today.year].keys():
 						if today.day in calendar[today.year][today.month].keys():
