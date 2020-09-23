@@ -198,7 +198,7 @@ if "config" in args.keys():
 	else:
 		argsData = pandas.read_excel(args["config"], header=0)
 	for argsDataIndex, argsDataValues in argsData.iterrows():
-		args[argsDataValues[0]] = argsDataValues[0]
+		args[argsDataValues[0]] = argsDataValues[1]
 
 print(args)
 
