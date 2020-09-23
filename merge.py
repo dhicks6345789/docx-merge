@@ -194,11 +194,11 @@ for argItem in sys.argv[1:]:
 		
 print(args)
 
-if "config" in args.keys:
+if "config" in args.keys():
 	print(args["config"])
 
 # The user wants a week-to-view calendar.
-if sys.argv[1] == "--week-to-view":
+if "week-to-view" in args.keys():
 	if len(sys.argv) == 7:
 		# Check the start date is a Monday.
 		startDate = theTimezone.localize(datetime.datetime.strptime(sys.argv[2], "%Y%m%d"))
