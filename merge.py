@@ -126,7 +126,13 @@ def parseICalFile(theFilename):
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND;VALUE=DATE:"):
 			iCalData["EndDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d")
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
-			iCalData["Description"] = iCalLine.split(":",1)[1]
+			description = iCalLine.split(":",1)[1]
+			if not description == "":
+				iCalData["Description"] = description
+		if iCalState == ICALINVEVENT and iCalLine.startswith("LOCATION:"):
+			location = iCalLine.split(":",1)[1].strip()
+			if not location == "":
+				iCalData["Location"] = location
 		if iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
 			iCalState = ICALSTART
 			if "StartDate" in iCalData.keys():
@@ -143,7 +149,11 @@ def parseICalFile(theFilename):
 				eventLength = iCalData["EndDate"] - iCalData["StartDate"]
 				currentDate = iCalData["StartDate"]
 				for eventDay in range(0, eventLength.days+1):
-					addCalendarItem(currentDate.year, currentDate.month, currentDate.day, timeString + normaliseString(iCalData["Description"]))
+					itemText = ""
+					itemText = itemText + iCalData["Description"]
+					if "Location" in iCalData.keys():
+						itemText = itemText + ", " + iCalData["Location"]
+					addCalendarItem(currentDate.year, currentDate.month, currentDate.day, timeString + normaliseString(itemText))
 					currentDate = currentDate + ONEDAY
 			else:
 				print("Unhandled event:\n" + iCalBlock.strip())
