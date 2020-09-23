@@ -6,6 +6,7 @@
 import os
 import re
 import sys
+import math
 import shutil
 import zipfile
 import datetime
@@ -178,6 +179,13 @@ def checkForRequiredArgs(theActualArgs, theRequiredArgs):
 		if not requiredArg in theActualArgs.keys():
 			print("ERROR: argument missing, " + requiredArg)
 			sys.exit(1)
+			
+def cellToStr(theInput):
+	if isinstance(theInput, str):
+		return(theInput)
+	if isinstance(theInput, float) and math.isnan(theInput):
+		return("")
+	return(str(theInput))
 											      
 # Check arguments, print a usage message if needed.
 if len(sys.argv) == 1:
@@ -204,14 +212,13 @@ if "config" in args.keys():
 	else:
 		argsData = pandas.read_excel(args["config"], header=0)
 	for argsDataIndex, argsDataValues in argsData.iterrows():
-		args[argsDataValues[0]] = argsDataValues[1]
+		args[argsDataValues[0]] = cellToStr(argsDataValues[1])
 
 # The user wants a week-to-view calendar.
 if "mergeType" in args.keys() and args["mergeType"] == "week-to-view":
 	checkForRequiredArgs(args, ["startDate","noOfWeeks","calendar","template","output"])
 	
 	# Check the start date is a Monday.
-	print(args["startDate"])
 	startDate = theTimezone.localize(datetime.datetime.strptime(args["startDate"], "%Y%m%d"))
 	if not startDate.weekday() == 0:
 		print("ERROR: Start date is not a Monday.")
