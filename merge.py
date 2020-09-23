@@ -172,6 +172,12 @@ def putFile(thePath, theData):
 	textHandle = open(thePath, "w")
 	textHandle.write(theData)
 	textHandle.close()
+	
+def checkForRequiredArgs(theActualArgs, theRequiredArgs):
+	for requiredArg in theRequiredArgs:
+		if not requiredArg in theActualArgs.keys():
+			print("ERROR: argument missing, " + requiredArg)
+			sys.exit(1)
 											      
 # Check arguments, print a usage message if needed.
 if len(sys.argv) == 1:
@@ -189,7 +195,7 @@ for argItem in sys.argv[1:]:
 		args[currentArgName] = argItem
 		currentArgName = None
 	else:
-		print("Error: unknown argument, " + argItem)
+		print("ERROR: unknown argument, " + argItem)
 		sys.exit(1)
 
 if "config" in args.keys():
@@ -200,65 +206,62 @@ if "config" in args.keys():
 	for argsDataIndex, argsDataValues in argsData.iterrows():
 		args[argsDataValues[0]] = argsDataValues[1]
 
-print(args)
-
 # The user wants a week-to-view calendar.
-if "week-to-view" in args.keys():
-	if len(sys.argv) == 7:
-		# Check the start date is a Monday.
-		startDate = theTimezone.localize(datetime.datetime.strptime(sys.argv[2], "%Y%m%d"))
-		if not startDate.weekday() == 0:
-			print("ERROR: Start date is not a Monday.")
-			sys.exit(0)
-		# Figure out the number of weeks to produce a calendar for.
-		noOfWeeks = int(sys.argv[3])
-		# Read the calendar data.
-		parseICalFile(sys.argv[4])
+if "mergeType" in args.keys() and args["mergeType"] == "week-to-view":
+	checkForRequiredArgs(args, ["startDate","noOfWeeks","calendar","template","output"])
+	
+	# Check the start date is a Monday.
+	startDate = theTimezone.localize(datetime.datetime.strptime(args["startDate"], "%Y%m%d"))
+	if not startDate.weekday() == 0:
+		print("ERROR: Start date is not a Monday.")
+		sys.exit(1)
+	# Figure out the number of weeks to produce a calendar for.
+	noOfWeeks = int(args["noOfWeeks"])
+	# Read the calendar data.
+	parseICalFile(args["calendar"])
+	
+	# The python-docx library doesn't have a function to duplicate pages, so we do that part ourselves by duplicating the main body of XML from
+	# the "document.xml" contained in the DOCX file.
+	docxText = extractDocx(args["template"], TEMPLATETEMP)
+	bodyStart = docxText.find("<w:body>")+8
+	bodyEnd = docxText.find("</w:body>")
+	newDocxText = docxText[:bodyStart]
+	# Copy the main body text once for each week the user wants to show. Might be multiple pages.
+	for week in range(0, noOfWeeks):
+		weekToViewText = docxText[bodyStart:bodyEnd]
+		for weekDay in range(0, 7):
+			today = startDate + datetime.timedelta(days=(week*7)+weekDay)
+			# Find the "title" string for the day.
+			weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "TI}}", today.strftime("%A, ") + unZeroPad(today.strftime("%d")) + today.strftime(" %B"))
+			# Find the "content" string for the day.
+			weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "CO}}", "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}")
+		newDocxText = newDocxText + weekToViewText
+	# Re-write the content back to the output location.
+	newDocxText = newDocxText + docxText[bodyEnd:]
+	putFile(TEMPLATETEMP + "word/document.xml", newDocxText)
+	compressDocx(TEMPLATETEMP, args["output"])
 		
-		# The python-docx library doesn't have a function to duplicate pages, so we do that part ourselves by duplicating the main body of XML from
-		# the "document.xml" contained in the DOCX file.
-		docxText = extractDocx(sys.argv[5], TEMPLATETEMP)
-		bodyStart = docxText.find("<w:body>")+8
-		bodyEnd = docxText.find("</w:body>")
-		newDocxText = docxText[:bodyStart]
-		# Copy the main body text once for each week the user wants to show. Might be multiple pages.
-		for week in range(0, noOfWeeks):
-			weekToViewText = docxText[bodyStart:bodyEnd]
-			for weekDay in range(0, 7):
-				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
-				# Find the "title" string for the day.
-				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "TI}}", today.strftime("%A, ") + unZeroPad(today.strftime("%d")) + today.strftime(" %B"))
-				# Find the "content" string for the day.
-				weekToViewText = weekToViewText.replace("{{" + DAYNAMES[weekDay] + "CO}}", "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}")
-			newDocxText = newDocxText + weekToViewText
-		# Re-write the content back to the output location.
-		newDocxText = newDocxText + docxText[bodyEnd:]
-		putFile(TEMPLATETEMP + "word/document.xml", newDocxText)
-		compressDocx(TEMPLATETEMP, sys.argv[6])
-		
-		# Now, read the output file again with the python-docx library.
-		templateDocx = docx.Document(sys.argv[6])
-		for week in range(0, noOfWeeks):
-			for weekDay in range(0, 7):
-				dayContents = ""
-				today = startDate + datetime.timedelta(days=(week*7)+weekDay)
-				if today.year in calendar.keys():
-					if today.month in calendar[today.year].keys():
-						if today.day in calendar[today.year][today.month].keys():
-							for dayItem in sorted(calendar[today.year][today.month][today.day]):
-								dayContents = dayContents + time24To12Hour(dayItem.replace("\n",", ")) + "\n"
-				dayContents = dayContents.strip()
-				dayString = "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}"
-				for paragraph in templateDocx.paragraphs:
-					if dayString in paragraph.text:
-						paragraph.text = dayContents
-				for table in templateDocx.tables:
-					for row in table.rows:
-						for cell in row.cells:
-							for paragraph in cell.paragraphs:
-								if dayString in paragraph.text:
-									paragraph.text = dayContents
-		# Write out the final version of the DOCX file.
-		templateDocx.save(sys.argv[6])
-	else:
-		print("ERROR: week-to-view - incorrect number of parameters.")
+	# Now, read the output file again with the python-docx library.
+	templateDocx = docx.Document(args["output"])
+	for week in range(0, noOfWeeks):
+		for weekDay in range(0, 7):
+			dayContents = ""
+			today = startDate + datetime.timedelta(days=(week*7)+weekDay)
+			if today.year in calendar.keys():
+				if today.month in calendar[today.year].keys():
+					if today.day in calendar[today.year][today.month].keys():
+						for dayItem in sorted(calendar[today.year][today.month][today.day]):
+							dayContents = dayContents + time24To12Hour(dayItem.replace("\n",", ")) + "\n"
+			dayContents = dayContents.strip()
+			dayString = "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}"
+			for paragraph in templateDocx.paragraphs:
+				if dayString in paragraph.text:
+					paragraph.text = dayContents
+			for table in templateDocx.tables:
+				for row in table.rows:
+					for cell in row.cells:
+						for paragraph in cell.paragraphs:
+							if dayString in paragraph.text:
+								paragraph.text = dayContents
+	# Write out the final version of the DOCX file.
+	templateDocx.save(args["output"])
