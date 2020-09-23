@@ -109,19 +109,19 @@ def parseICalFile(theFilename):
 		if iCalState == ICALINVEVENT:
 			iCalBlock = iCalBlock + iCalLine + "\n"
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
-			print(iCalLine)
 			startDateTime = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
-			print(startDateTime)
-			print((startDateTime + startDateTime.utcoffset()).strftime("%Y%m%d %H%M%S"))
-			iCalData["StartDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d"))
-			iCalData["StartTime"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S"))
+			iCalData["StartDate"] = startDateTime + startDateTime.utcoffset()
+			iCalData["StartTime"] = startDateTime + startDateTime.utcoffset()
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART;VALUE=DATE:"):
-			iCalData["StartDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d"))
+			startDateTime = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
+			iCalData["StartDate"] = startDateTime + startDateTime.utcoffset()
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
-			iCalData["EndDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d"))
-			iCalData["EndTime"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S"))
+			endDateTime = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
+			iCalData["EndDate"] = endDateTime + startDateTime.utcoffset()
+			iCalData["EndTime"] = endDateTime + startDateTime.utcoffset()
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND;VALUE=DATE:"):
-			iCalData["EndDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d"))
+			endDateTime = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
+			iCalData["EndDate"] = endDateTime + startDateTime.utcoffset()
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
 			iCalData["Description"] = iCalLine.split(":",1)[1]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
