@@ -113,15 +113,13 @@ def parseICalFile(theFilename):
 			iCalData["StartDate"] = startDateTime + startDateTime.utcoffset()
 			iCalData["StartTime"] = startDateTime + startDateTime.utcoffset()
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART;VALUE=DATE:"):
-			startDateTime = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
-			iCalData["StartDate"] = startDateTime + startDateTime.utcoffset()
+			iCalData["StartDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d")
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND:"):
 			endDateTime = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
 			iCalData["EndDate"] = endDateTime + startDateTime.utcoffset()
 			iCalData["EndTime"] = endDateTime + startDateTime.utcoffset()
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND;VALUE=DATE:"):
-			endDateTime = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
-			iCalData["EndDate"] = endDateTime + startDateTime.utcoffset()
+			iCalData["EndDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ")
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
 			iCalData["Description"] = iCalLine.split(":",1)[1]
 		if iCalState == ICALINVEVENT and iCalLine.startswith("END:VEVENT"):
