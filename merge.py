@@ -125,8 +125,12 @@ def parseICalFile(theFilename):
 			iCalData["EndTime"] = endDateTime + startDateTime.utcoffset()
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTEND;VALUE=DATE:"):
 			iCalData["EndDate"] = datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%d")
+		if iCalState == ICALINVEVENT and iCalLine.startswith("SUMMARY:"):
+			summary = iCalLine.split(":",1)[1].strip()
+			if not description == "":
+				iCalData["Summary"] = summary
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DESCRIPTION:"):
-			description = iCalLine.split(":",1)[1]
+			description = iCalLine.split(":",1)[1].strip()
 			if not description == "":
 				iCalData["Description"] = description
 		if iCalState == ICALINVEVENT and iCalLine.startswith("LOCATION:"):
@@ -150,6 +154,9 @@ def parseICalFile(theFilename):
 				currentDate = iCalData["StartDate"]
 				for eventDay in range(0, eventLength.days+1):
 					itemText = ""
+					if "Summary" in iCalData.keys():
+						if not iCalData["Summary"] == iCalData["Description"]:
+							itemText = itemText + iCalData["Summary"] + ", "
 					itemText = itemText + iCalData["Description"]
 					if "Location" in iCalData.keys():
 						itemText = itemText + ", " + iCalData["Location"]
