@@ -6,16 +6,20 @@
 import os
 import re
 import sys
-import pytz
 import shutil
 import zipfile
 import datetime
 
-theTimezone = pytz.timezone("Europe/London")
-
 # The python-docx library, for manipulating DOCX files.
 # Importantly, when installing with pip, that not the "docx" library, that an earlier version - do "pip install python-docx".
 import docx
+
+# We use Pandas to import Excel / CSV files for configuration details.
+import pandas
+
+# The pytz library, for dealing sensibly with timezones.
+import pytz
+theTimezone = pytz.timezone("Europe/London")
 
 # Possible states for the iCal parser.
 ICALSTART = 0
@@ -174,6 +178,24 @@ if len(sys.argv) == 1:
 	print("DOCX Merge - merges data into DOCX templates. Usage:")
 	print("merge.py --week-to-view startDate noOfWeeks data.ics template.docx output.docx")
 	sys.exit(0)
+	
+# Parse command-line arguments.
+args = {}
+currentArgName = None
+for argItem in sys.argv[1:]:
+	if argItem.startswith("--"):
+		currentArgName = argItem[2:]
+	elif not currentArgName == None:
+		args[currentArgName] = argItem
+		currentArgName = None
+	else:
+		print("Error: unknown argument, " + argItem)
+		sys.exit(1)
+		
+print(args)
+
+if "config" in args.keys:
+	print(args["config"])
 
 # The user wants a week-to-view calendar.
 if sys.argv[1] == "--week-to-view":
