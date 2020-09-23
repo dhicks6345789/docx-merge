@@ -191,11 +191,16 @@ for argItem in sys.argv[1:]:
 	else:
 		print("Error: unknown argument, " + argItem)
 		sys.exit(1)
-		
-print(args)
 
 if "config" in args.keys():
-	print(args["config"])
+	if args["config"].endswith(".csv"):
+		argsData = pandas.read_csv(args["config"], header=0)
+	else:
+		argsData = pandas.read_excel(args["config"], header=0)
+	for argsDataIndex, argsDataValues in argsData.iterrows():
+		args[argsDataValues[0]] = argsDataValues[0]
+
+print(args)
 
 # The user wants a week-to-view calendar.
 if "week-to-view" in args.keys():
