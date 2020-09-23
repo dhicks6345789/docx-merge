@@ -23,7 +23,6 @@ ICALINVEVENT = 1
 
 # Used for placeholder names in calendars.
 DAYNAMES = ["MO","TU","WE","TH","FR","SA","SU"]
-DAYTITLES = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
 
 # DOCX files are ZIP files - we need a folder to unzip the contenst into if we want to modify a contained file.
 TEMPLATETEMP = "templateTemp/"
@@ -89,8 +88,8 @@ def parseICalFile(theFilename):
 	iCalState = ICALSTART
 	iCalData = {}
 	
-	# Read the iCal file in as a bunch of text entries. We don't just use readlines() as some entries can be split over multiple lines, so we have to detect those
-	# and stick them back together as we go along.
+	# Read the iCal file in as a bunch of text entries. We don't just use readlines() as some entries can be split over multiple lines, so we have to detect
+	# those and stick them back together as we go along.
 	iCalLines = []
 	iCalHandle = open(theFilename, encoding="utf-8")
 	for iCalLine in iCalHandle:
@@ -111,8 +110,8 @@ def parseICalFile(theFilename):
 			iCalBlock = iCalBlock + iCalLine + "\n"
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
 			print(iCalLine)
-			print(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
-			print(theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ")))
+			startDateTime = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
+			print(startDateTime.strftime("%Y%m%d %H%M%S"))
 			iCalData["StartDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d"))
 			iCalData["StartTime"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S"))
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART;VALUE=DATE:"):
