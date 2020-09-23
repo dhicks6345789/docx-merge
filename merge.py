@@ -160,7 +160,7 @@ def extractDocx(theFilename, destinationPath):
 
 # Turns the contents of the given folder into a DOCX file. Deletes the source folder when done.
 def compressDocx(sourcePath, theFilename):
-	theDocx = zipfile.ZipFile(sys.argv[6], "w")
+	theDocx = zipfile.ZipFile(theFilename, "w")
 	for root, dirs, files in os.walk(sourcePath):
 		for file in files:
 			theDocx.write(os.path.join(root, file), os.path.join(root, file)[len(sourcePath):])
@@ -211,6 +211,7 @@ if "mergeType" in args.keys() and args["mergeType"] == "week-to-view":
 	checkForRequiredArgs(args, ["startDate","noOfWeeks","calendar","template","output"])
 	
 	# Check the start date is a Monday.
+	print(args["startDate"])
 	startDate = theTimezone.localize(datetime.datetime.strptime(args["startDate"], "%Y%m%d"))
 	if not startDate.weekday() == 0:
 		print("ERROR: Start date is not a Monday.")
