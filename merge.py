@@ -111,6 +111,7 @@ def parseICalFile(theFilename):
 		if iCalState == ICALINVEVENT and iCalLine.startswith("DTSTART:"):
 			print(iCalLine)
 			startDateTime = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1], "%Y%m%dT%H%M%SZ"))
+			print(startDateTime)
 			print(startDateTime.strftime("%Y%m%d %H%M%S"))
 			iCalData["StartDate"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[0], "%Y%m%d"))
 			iCalData["StartTime"] = theTimezone.localize(datetime.datetime.strptime(iCalLine.split(":",1)[1].split("T")[1].split("Z")[0], "%H%M%S"))
