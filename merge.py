@@ -280,8 +280,11 @@ if "mergeType" in args.keys() and args["mergeType"] == "week-to-view":
 			dayContents = dayContents.strip()
 			dayString = "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}"
 			for paragraph in templateDocx.paragraphs:
-				if dayString in paragraph.text:
-					paragraph.text = dayContents
+				for run in paragraph.runs:
+					#if dayString in paragraph.text:
+						#paragraph.text = dayContents
+					if dayString in run.text:
+						run.text = dayContents
 			for table in templateDocx.tables:
 				for row in table.rows:
 					for cell in row.cells:
