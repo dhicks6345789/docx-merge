@@ -12,7 +12,7 @@ import zipfile
 import datetime
 
 # The python-docx library, for manipulating DOCX files.
-# Importantly, when installing with pip, that not the "docx" library, that an earlier version - do "pip install python-docx".
+# Importantly, when installing with pip, that's not the "docx" library, that's an earlier version - do "pip install python-docx".
 import docx
 
 # We use Pandas to import Excel / CSV files for configuration details.
@@ -22,6 +22,8 @@ import pandas
 import pytz
 theTimezone = pytz.timezone("Europe/London")
 
+
+
 # Possible states for the iCal parser.
 ICALSTART = 0
 ICALINVEVENT = 1
@@ -29,7 +31,7 @@ ICALINVEVENT = 1
 # Used for placeholder names in calendars.
 DAYNAMES = ["MO","TU","WE","TH","FR","SA","SU"]
 
-# DOCX files are ZIP files - we need a folder to unzip the contenst into if we want to modify a contained file.
+# DOCX files are ZIP files - we need a folder to unzip the contents into if we want to modify a contained file.
 TEMPLATETEMP = "templateTemp/"
 
 ONEDAY = datetime.timedelta(days=1)
@@ -65,6 +67,13 @@ def normaliseString(theString):
 	for resultItem in theString.replace("\\n","\n").replace("\\,",",").replace("·","").split("\n"):
 		result = result + resultItem.strip() + "\n"
 	return(result.strip())
+
+def cellToStr(theInput):
+	if isinstance(theInput, str):
+		return(theInput)
+	if isinstance(theInput, float) and math.isnan(theInput):
+		return("")
+	return(str(theInput))
 
 def unZeroPad(theString):
 	if theString[0] == "0":
@@ -143,7 +152,8 @@ def parseICalFile(theFilename):
 				# Do we not have an EndDate set? Assume the event lasts one day.
 				if not "EndDate" in iCalData.keys():
 					iCalData["EndDate"] = iCalData["StartDate"]
-				# Does the event not have a start / end time set but seems to last from one day until the next? Simply the event into lasting one day.
+				# Does the event not have a start / end time set but seems to last from one day until the next? Simply force the event into
+				# lasting one day.
 				if iCalData["EndDate"] == (iCalData["StartDate"] + ONEDAY):
 					if not "StartTime" in iCalData.keys() and not "EndTime" in iCalData.keys():
 						iCalData["EndDate"] = iCalData["StartDate"]
@@ -196,13 +206,6 @@ def checkForRequiredArgs(theActualArgs, theRequiredArgs):
 		if not requiredArg in theActualArgs.keys():
 			print("ERROR: argument missing, " + requiredArg)
 			sys.exit(1)
-			
-def cellToStr(theInput):
-	if isinstance(theInput, str):
-		return(theInput)
-	if isinstance(theInput, float) and math.isnan(theInput):
-		return("")
-	return(str(theInput))
 
 def calendarItemSortOrder(theItem):
 	if not theItem[0] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
