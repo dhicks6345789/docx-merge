@@ -203,6 +203,13 @@ def cellToStr(theInput):
 	if isinstance(theInput, float) and math.isnan(theInput):
 		return("")
 	return(str(theInput))
+
+def calendarItemSortOrder(theItem):
+	for pl in theItem:
+		for numeral in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+			if theItem[pl] == numeral:
+				theItem[pl] = char(ord(numeral) + 128)
+	return theItem
 											      
 # Check arguments, print a usage message if needed.
 if len(sys.argv) == 1:
@@ -275,7 +282,7 @@ if "mergeType" in args.keys() and args["mergeType"] == "week-to-view":
 			if today.year in calendar.keys():
 				if today.month in calendar[today.year].keys():
 					if today.day in calendar[today.year][today.month].keys():
-						for dayItem in sorted(calendar[today.year][today.month][today.day]):
+						for dayItem in sorted(calendar[today.year][today.month][today.day], key=calendarItemSortOrder):
 							dayContents = dayContents + time24To12Hour(dayItem.replace("\n",", ")) + "\n"
 			dayContents = dayContents.strip()
 			dayString = "{{" + DAYNAMES[weekDay] + "-WEEK" + str(week) + "}}"
