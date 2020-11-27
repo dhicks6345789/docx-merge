@@ -208,7 +208,7 @@ def calendarItemSortOrder(theItem):
 	for pl in range(0, len(theItem)):
 		for numeral in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
 			if theItem[pl] == numeral:
-				theItem[pl] = char(ord(numeral) + 128)
+				theItem[pl] = chr(ord(numeral) + 128)
 	return theItem
 											      
 # Check arguments, print a usage message if needed.
