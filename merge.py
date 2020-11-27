@@ -205,13 +205,13 @@ def cellToStr(theInput):
 	return(str(theInput))
 
 def calendarItemSortOrder(theItem):
+	return theItem
 	result = ""
 	for pl in range(0, len(theItem)):
-		for numeral in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-			if theItem[pl] == numeral:
-				result = result + chr(ord(numeral) + 128)
-			else:
-				result = result + theItem[pl]
+		if theItem[pl] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+			result = result + chr(ord(theItem[pl]) + 128)
+		else:
+			result = result + theItem[pl]
 	return result
 											      
 # Check arguments, print a usage message if needed.
