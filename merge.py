@@ -205,6 +205,8 @@ def cellToStr(theInput):
 	return(str(theInput))
 
 def calendarItemSortOrder(theItem):
+	if not theItem[0] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+		return "00:01: " + theItem
 	return theItem
 	result = ""
 	for pl in range(0, len(theItem)):
