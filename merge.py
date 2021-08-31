@@ -164,11 +164,11 @@ def parseICalFile(theFilename):
 				currentDate = iCalData["StartDate"]
 				for eventDay in range(0, eventLength.days+1):
 					itemText = ""
-					description = ""
 					if "Summary" in iCalData.keys():
 						itemText = iCalData["Summary"]
 						if "Description" in iCalData.keys():
-							itemText = itemText + ", " + iCalData["Description"]
+							if not iCalData["Summary"] == iCalData["Description"]:
+								itemText = itemText + ", " + iCalData["Description"]
 					else:
 						if "Description" in iCalData.keys():
 							itemText = iCalData["Description"]
