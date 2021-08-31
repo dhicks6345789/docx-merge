@@ -167,9 +167,9 @@ def parseICalFile(theFilename):
 					if "Summary" in iCalData.keys():
 						itemText = iCalData["Summary"]
 						if "Description" in iCalData.keys():
-							print("AA" + iCalData["Summary"] + "BB", flush=True)
-							print("CC" + iCalData["Description"] + "DD", flush=True)
-							if not iCalData["Summary"] == iCalData["Description"]:
+							#print("AA" + iCalData["Summary"] + "BB", flush=True)
+							#print("CC" + iCalData["Description"] + "DD", flush=True)
+							if iCalData["Summary"] != iCalData["Description"]:
 								itemText = itemText + ", " + iCalData["Description"]
 					else:
 						if "Description" in iCalData.keys():
