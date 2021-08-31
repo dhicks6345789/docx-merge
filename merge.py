@@ -164,10 +164,14 @@ def parseICalFile(theFilename):
 				currentDate = iCalData["StartDate"]
 				for eventDay in range(0, eventLength.days+1):
 					itemText = ""
+					description = ""
+					if "Description" in iCalData.keys():
+						description = iCalData["Description"]
 					if "Summary" in iCalData.keys():
-						if not iCalData["Summary"] == iCalData["Description"]:
+						if not iCalData["Summary"] == description:
 							itemText = itemText + iCalData["Summary"] + ", "
-					itemText = itemText + iCalData["Description"]
+					if description == "":
+						itemText = itemText + description
 					if "Location" in iCalData.keys():
 						itemText = itemText + ", " + iCalData["Location"]
 					addCalendarItem(currentDate.year, currentDate.month, currentDate.day, timeString + normaliseString(itemText))
