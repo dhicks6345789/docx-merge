@@ -165,13 +165,13 @@ def parseICalFile(theFilename):
 				for eventDay in range(0, eventLength.days+1):
 					itemText = ""
 					description = ""
-					if "Description" in iCalData.keys():
-						description = iCalData["Description"]
 					if "Summary" in iCalData.keys():
-						if not iCalData["Summary"] == description:
-							itemText = itemText + iCalData["Summary"] + ", "
-					if description == "":
-						itemText = itemText + description
+						itemText = iCalData["Summary"]
+						if "Description" in iCalData.keys():
+							itemText = itemText + ", " + iCalData["Description"]
+					else:
+						if "Description" in iCalData.keys():
+							itemText = iCalData["Description"]
 					if "Location" in iCalData.keys():
 						itemText = itemText + ", " + iCalData["Location"]
 					addCalendarItem(currentDate.year, currentDate.month, currentDate.day, timeString + normaliseString(itemText))
@@ -212,6 +212,8 @@ def checkForRequiredArgs(theActualArgs, theRequiredArgs):
 			sys.exit(1)
 
 def calendarItemSortOrder(theItem):
+	if theItem = "":
+		return "00:00:00"
 	if not theItem[0] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
 		return "00:01: " + theItem
 	return theItem
