@@ -212,7 +212,7 @@ def checkForRequiredArgs(theActualArgs, theRequiredArgs):
 			sys.exit(1)
 
 def calendarItemSortOrder(theItem):
-	if theItem = "":
+	if theItem == "":
 		return "00:00:00"
 	if not theItem[0] in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
 		return "00:01: " + theItem
