@@ -258,6 +258,7 @@ if "config" in args.keys():
 if "mergeType" in args.keys() and args["mergeType"] == "week-to-view":
 	checkForRequiredArgs(args, ["startDate","noOfWeeks","calendar","template","output"])
 	
+	print("startDate: ", args["startDate"])
 	# Check the start date is a Monday.
 	startDate = theTimezone.localize(datetime.datetime.strptime(args["startDate"], "%Y%m%d"))
 	if not startDate.weekday() == 0:
