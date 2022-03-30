@@ -258,9 +258,10 @@ if "config" in args.keys():
 if "mergeType" in args.keys() and args["mergeType"] == "week-to-view":
 	checkForRequiredArgs(args, ["startDate","noOfWeeks","calendar","template","output"])
 	
-	print("Start date: ", args["startDate"])
-	# Check the start date is a Monday.
-	startDate = theTimezone.localize(datetime.datetime.strptime(args["startDate"].split(" ")[0], "%Y-%m-%d"))
+	# Parse the start date, check it is a Monday.
+	startDate = args["startDate"].strip().split(" ")[0]
+	print("Start date: ", startDate)
+	startDate = theTimezone.localize(datetime.datetime.strptime(startDate, "%Y-%m-%d"))
 	if not startDate.weekday() == 0:
 		print("ERROR: Start date is not a Monday.")
 		sys.exit(1)
