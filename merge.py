@@ -265,7 +265,7 @@ if "mergeType" in args.keys() and args["mergeType"] == "week-to-view":
 		print("ERROR: Start date is not a Monday.")
 		sys.exit(1)
 	# Figure out the number of weeks to produce a calendar for.
-	noOfWeeks = int(args["noOfWeeks"])
+	noOfWeeks = int(float(args["noOfWeeks"]))
 	# Read the calendar data.
 	parseICalFile(args["calendar"])
 	
